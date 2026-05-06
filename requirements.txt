@@ -1,0 +1,5 @@
+numpy
+pandas
+rasterio
+scikit-learn
+joblib
