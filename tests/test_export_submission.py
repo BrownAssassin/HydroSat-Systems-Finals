@@ -37,3 +37,6 @@ class ExportSubmissionTest(unittest.TestCase):
             )
             self.assertFalse((dest / "data").exists())
             self.assertFalse((dest / "artifacts").exists())
+            local_models = sorted(path.name for path in (REPO_ROOT / "models").iterdir() if path.is_file())
+            exported_models = sorted(path.name for path in (dest / "models").iterdir() if path.is_file())
+            self.assertEqual(exported_models, local_models)

@@ -30,7 +30,7 @@ Each area contains:
 
 Notes:
 
-- `area2` and `area3` do not include chlorophyll-a labels.
+- `area2` and `area3` do not include chlorophyll-a labels
 - each CSV row is a point record linked to an image by the `filename` column
 - the intended training unit is a local image patch centered on each labeled point
 
@@ -65,8 +65,20 @@ and a single numeric prediction inside a list.
 The task PDF describes:
 
 - RMSE
-- R²
+- R^2
 - NRMSE-based score normalization
 - final algorithm score as the average of the turbidity and chlorophyll-a scores
 
 This repo should treat the Track 2 task PDF as the source of truth if it conflicts with the generic round-2 manual.
+
+## Phase 2 Baseline Approach
+
+The implemented baseline in this repo currently does the following:
+
+- extract `32x32` patches centered on each point record
+- compute per-band stats, water-masked stats, spectral indices, center-window summaries, and gradient features
+- train separate models for `turbidity` and `chla`
+- select the shipped baseline by `area`-grouped CV
+- record `filename`-grouped CV as a secondary diagnostic
+
+The rationale for prioritizing `area`-grouped CV is that the competition leaderboard evaluates on an unseen `area8`, so geographic generalization matters more than same-scene interpolation.
