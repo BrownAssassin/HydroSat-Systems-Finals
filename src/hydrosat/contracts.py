@@ -7,7 +7,11 @@ import json
 import re
 from numbers import Real
 
-from .config import CHLA_RESULT_FILENAME, TURBIDITY_RESULT_FILENAME
+from .config import (
+    CHLA_RESULT_FILENAME,
+    OUTPUT_ALIAS_FILENAMES,
+    TURBIDITY_RESULT_FILENAME,
+)
 
 _PREDICTION_KEY_PATTERN = re.compile(
     r"^(?P<filename>.+\.tif)_(?P<lon>-?\d+(?:\.\d+)?)_(?P<lat>-?\d+(?:\.\d+)?)$"
@@ -65,8 +69,10 @@ def write_prediction_file(output_dir: Path | str, target: str, predictions: dict
     normalized = validate_prediction_mapping(predictions)
     output_path = Path(output_dir) / result_filename_for_target(target)
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    with output_path.open("w", encoding="utf-8") as handle:
-        json.dump(normalized, handle, indent=2, sort_keys=True)
+    payload_text = json.dumps(normalized, indent=2, sort_keys=True)
+    output_path.write_text(payload_text, encoding="utf-8")
+    for alias_name in OUTPUT_ALIAS_FILENAMES.get(target, ()):
+        (output_path.parent / alias_name).write_text(payload_text, encoding="utf-8")
     return output_path
 
 

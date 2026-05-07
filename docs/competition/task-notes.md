@@ -60,6 +60,11 @@ Each file should be a JSON object with keys in the form:
 
 and a single numeric prediction inside a list.
 
+For compatibility with the competition GitLab README, the baseline also emits:
+
+- `/output/turbidity_result.json`
+- `/output/chla_result.json`
+
 ## Scoring Notes
 
 The task PDF describes:

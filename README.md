@@ -135,6 +135,11 @@ The authoritative Track 2 output files are:
 - `/output/result_turbidity.json`
 - `/output/result_chla.json`
 
+For compatibility with the competition GitLab template docs, inference also writes:
+
+- `/output/turbidity_result.json`
+- `/output/chla_result.json`
+
 Each JSON maps keys in the form:
 
 ```text
@@ -160,5 +165,6 @@ The hidden competition test is an unseen geographic region (`area8`), so `area`-
 ## Notes
 
 - When the generic submission manual conflicts with the Track 2 task PDF, follow the Track 2 task PDF for output naming.
+- To be safe across the task PDF and the competition GitLab README, the baseline writes both `result_turbidity/result_chla` and `turbidity_result/chla_result`.
 - The baseline includes a hidden-test-aware weighted training variant because the organizer-released hidden-label statistics are much lower-tailed than the public training labels.
 - The root `.gitlab-ci.yml` remains a local scaffold. Before submitting, merge its paths and command settings into the official competition GitLab template.

@@ -28,7 +28,12 @@ The generic submission manual uses `result.json` examples from other tracks. For
 - `/output/result_turbidity.json`
 - `/output/result_chla.json`
 
-That rule is captured directly in `src/hydrosat/contracts.py`.
+The competition GitLab README also shows the alias names:
+
+- `/your_container_output_path/turbidity_result.json`
+- `/your_container_output_path/chla_result.json`
+
+The current baseline writes both naming variants for safety.
 
 ## Submission Strategy
 

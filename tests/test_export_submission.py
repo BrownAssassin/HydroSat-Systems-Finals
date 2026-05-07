@@ -33,7 +33,18 @@ class ExportSubmissionTest(unittest.TestCase):
             exported_top_level = sorted(path.name for path in dest.iterdir())
             self.assertEqual(
                 exported_top_level,
-                sorted([".gitlab-ci.yml", "Dockerfile", "README.md", "models", "pyproject.toml", "requirements.txt", "run.sh", "src"]),
+                sorted(
+                    [
+                        ".gitattributes",
+                        "Dockerfile",
+                        "README.md",
+                        "models",
+                        "pyproject.toml",
+                        "requirements.txt",
+                        "run.sh",
+                        "src",
+                    ]
+                ),
             )
             self.assertFalse((dest / "data").exists())
             self.assertFalse((dest / "artifacts").exists())

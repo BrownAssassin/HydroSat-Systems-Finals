@@ -34,6 +34,8 @@ class SubmissionContractTest(unittest.TestCase):
 
             result_paths = validate_submission_outputs(output_dir)
             self.assertEqual(set(result_paths), {"result_turbidity.json", "result_chla.json"})
+            self.assertTrue((output_dir / "turbidity_result.json").exists())
+            self.assertTrue((output_dir / "chla_result.json").exists())
 
     def test_invalid_prediction_key_is_rejected(self) -> None:
         with self.assertRaises(ValueError):

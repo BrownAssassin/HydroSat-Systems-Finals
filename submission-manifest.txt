@@ -1,6 +1,6 @@
+.gitattributes
 README.md
 Dockerfile
-.gitlab-ci.yml
 requirements.txt
 pyproject.toml
 run.sh
