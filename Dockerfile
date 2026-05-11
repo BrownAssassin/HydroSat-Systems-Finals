@@ -1,23 +1,36 @@
-ARG BASE_IMAGE=10.200.99.202:15080/zero2x002/competition-base:pytorch2.5.1-cuda12.1-cudnn9
-FROM ${BASE_IMAGE}
+FROM 10.200.99.202:15080/zero2x002/competition-base:pytorch2.5.1-cuda12.1-cudnn9
 
-WORKDIR /workspace
+WORKDIR /app
 
-ARG PIP_CACHE_DIR=/tmp/pip-cache
+COPY . /app/
 
-ENV PYTHONUNBUFFERED=1 \
-    PYTHONPATH=/workspace/src \
-    INPUT_DIR=/input \
-    OUTPUT_DIR=/output \
-    MODEL_DIR=/workspace/models \
-    HYDROSAT_MODELS_DIR=/workspace/models
+RUN pip install --cache-dir /tmp/pip-cache -r requirements.txt -i https://repo.huaweicloud.com/repository/pypi/simple
 
-COPY requirements.txt /workspace/requirements.txt
-RUN python -m pip install --no-cache-dir --upgrade pip && \
-    python -m pip install --cache-dir "${PIP_CACHE_DIR}" -r /workspace/requirements.txt -i https://repo.huaweicloud.com/repository/pypi/simple
+RUN chmod +x run.sh
 
-COPY . /workspace
+ENV PYTHONPATH=/app/src
+ENV INPUT_DIR=/input
+ENV OUTPUT_DIR=/output
+ENV MODEL_DIR=/app/artifacts/models
+ENV HYDROSAT_ENABLE_CNN=0
+ENV HYDROSAT_CALIBRATE_TEST_STATS=1
+ENV HYDROSAT_CALIBRATE_TURBIDITY_TEST_STATS=1
+ENV HYDROSAT_CALIBRATE_CHLA_TEST_STATS=1
+ENV HYDROSAT_TURBIDITY_PRIOR_SHRINK=0.45
+ENV HYDROSAT_CHLA_PRIOR_SHRINK=0
+ENV HYDROSAT_NEUTRALIZE_GEO=0
+ENV HYDROSAT_TURBIDITY_MODE=blend
+ENV HYDROSAT_TURBIDITY_INVERT_RANK=0
+ENV HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT=0.45
+ENV HYDROSAT_TURBIDITY_CALIBRATION=lognormal_rank
+ENV HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA=0.80
+ENV HYDROSAT_CHLA_MODE=model
+ENV HYDROSAT_CHLA_HEURISTIC_WEIGHT=0.25
+ENV HYDROSAT_CHLA_INVERT_RANK=0
+ENV PATCH_SIZE=32
+ENV LOKY_MAX_CPU_COUNT=1
+ENV OMP_NUM_THREADS=1
+ENV OPENBLAS_NUM_THREADS=1
+ENV MKL_NUM_THREADS=1
 
-RUN chmod +x /workspace/run.sh
-
-CMD ["/workspace/run.sh"]
+CMD ["./run.sh"]

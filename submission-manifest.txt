@@ -1,8 +1,0 @@
-.gitattributes
-README.md
-Dockerfile
-requirements.txt
-pyproject.toml
-run.sh
-models
-src

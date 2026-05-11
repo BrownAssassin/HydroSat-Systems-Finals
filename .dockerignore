@@ -1,23 +1,13 @@
-.git
-.gitignore
-.github
-.pytest_cache
-.mypy_cache
-.ruff_cache
-__pycache__
+.git/
+.pip-cache/
+__pycache__/
 *.py[cod]
-*.pyo
-*.pyd
-*.so
-.coverage
-htmlcov
+.pytest_cache/
+.mypy_cache/
 
-data/raw
-artifacts
-docs
-tests
-.ipynb_checkpoints
-.venv
-venv
-env
-.env
+track2_download_link_*/
+Round2 Project Submission Manual_en_0403.pdf
+slides_sample.pptx
+artifacts/features/
+artifacts/output/
+catboost_info/
