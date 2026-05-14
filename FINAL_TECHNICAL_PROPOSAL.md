@@ -1,93 +1,108 @@
 # HydroSat Final Technical Proposal
 
-## Final Concept
+## 1. Mission Fit
 
-HydroSat is an onboard water-quality intelligence pipeline, not only a regression model. The final proposed system combines a stable CPU-first global ensemble with an optical-regime decision layer that adds water-type awareness, uncertainty estimation, and selective downlink logic.
+HydroSat is designed for the Clean Water final-round task: estimate turbidity and chlorophyll-a from multi-band satellite imagery while staying compatible with an onboard-computing context. The implemented baseline favors a small, auditable, CPU-first inference path rather than a GPU-only design, because the competition brief emphasizes constrained space-computing environments.
 
-## Final Architecture
+## 2. Implemented Baseline System
 
-```text
-Multispectral image patch
- -> quality gate
- -> spectral, index, and texture feature extraction
- -> stable global ensemble prediction
- -> optical-regime router
- -> regime expert correction
- -> uncertainty and disagreement estimation
- -> calibrated final output
- -> selective downlink decision
-```
-
-## Prediction Model
-
-The final technical solution is a hybrid model:
-
-- A deterministic global ensemble provides the primary turbidity and chlorophyll-a estimates.
-- An optical-regime router classifies observations into water-type regimes.
-- Regime-specific expert models provide calibrated corrections.
-- Model disagreement is used as an uncertainty signal.
-- Low-confidence or out-of-distribution observations are flagged for selective image-patch downlink.
-
-The best local hybrid validation used:
+The checked-in system is a deterministic inference pipeline:
 
 ```text
-turbidity_final = 0.80 * global_turbidity + 0.20 * regime_turbidity
-chla_final      = 0.97 * global_chla      + 0.03 * regime_chla
+point table + 12-band GeoTIFF
+-> point-centered patch extraction
+-> spectral and spatial feature generation
+-> target-specific ensemble regressors
+-> calibration and clipping
+-> JSON output packaging
 ```
 
-## Local Validation Evidence
+What is implemented in the repository today:
 
-The best previous global ensemble validation score was:
+- point-centered patch extraction from Sentinel-style 12-band TIFFs
+- 32x32 patch-based handcrafted spectral and texture features
+- separate turbidity and chl-a inference paths
+- ensemble `.joblib` models as the default runtime path
+- optional CNN artifacts retained outside the critical path
+- Dockerized execution for `/input`, `/output`, and `/workspace`
 
-```text
-Algorithm score: 57.1568
-```
+The current feature builder emits about `1073` features per point, with `1070` numeric features.
 
-The hybrid regime-aware sweep improved this to:
+## 3. Measured Local Evidence
 
-```text
-Turbidity score: 54.5458
-Chl-a score:     60.7303
-Algorithm score: 57.6381
-Improvement:     +0.4813
-```
+After the organizers released the full Area8 image bundle and truth JSONs, the repository was evaluated offline using the official final-round scoring formula from the task PDF:
 
-This shows that the optical-regime layer is not only useful for explainability and confidence. A small regime-aware correction also improved local validation while preserving the stability of the global ensemble.
+- `NRMSE = RMSE / mean_truth`
+- `parameter_score = (0.5 * max(0, R2) + 0.5 * max(0, 1 - NRMSE)) * 100`
+- `algorithm_score = 0.5 * turbidity_score + 0.5 * chla_score`
 
-## Official Local Scoring Check
+Measured results from `python -m hydrosat.evaluate_released_area8`:
 
-The released local Area8 truth files contain:
+- Turbidity: `RMSE 2.4604`, `R2 -0.1649`, `score 0.0000`
+- Chl-a: `RMSE 1.2252`, `R2 -0.0503`, `score 12.0906`
+- Final algorithm score: `6.0453`
 
-```text
-Turbidity truth points: 372
-Chl-a truth points:     103
-Required Area8 scenes:  59
-```
+The released Area8 evaluation processed:
 
-The available Kaggle image bundle contained only 1 of the 59 required Area8 TIFF scenes. Therefore, complete image-based local scoring could not be reproduced without the missing 58 scenes. The official scoring formula and key matching were still implemented and verified.
+- `372` turbidity points
+- `103` chl-a points
+- `475` total points
 
-When the inference package fell back to constant public statistics because the images were missing, the full-truth fallback score was:
+Runtime on this local RTX 5070 laptop workflow was about `20.43` seconds end to end. The default ensemble inference bundle is about `29.57 MB`, while the full checked-in model folder including optional CNN artifacts is about `73.01 MB`.
 
-```text
-Turbidity score: 0.0
-Chl-a score:     0.0
-Algorithm score: 0.0
-```
+## 4. On-Orbit Feasibility
 
-This confirms that fallback-only inference is not a viable final model and that the meaningful model evidence comes from the hybrid validation sweep.
+The implemented baseline is more plausible for on-orbit deployment than a CNN-only stack because:
 
-## Innovation and Mission Plausibility
+- the critical path does not require GPU acceleration
+- serialized ensemble weights are compact compared with large end-to-end vision models
+- inference streams point rows and local patches instead of retaining whole-scene tensors in memory
+- the execution path is deterministic, bounded, and easy to audit
 
-The proposal is strongest when framed as a spacecraft decision system:
+In a mission setting, this style of model can support:
 
-- It performs quality gating before regression.
-- It uses target-specific spectral features for turbidity and chlorophyll-a.
-- It separates stable prediction from optical-regime interpretation.
-- It quantifies uncertainty through model disagreement.
-- It supports selective downlink of compact prediction packets, masks, thumbnails, or high-value image patches.
-- It remains CPU-executable, with optional neural extensions for later missions.
+- onboard request-table processing
+- compact downlink of water-quality products rather than full-scene imagery
+- fallback-safe execution when accelerators are unavailable
 
-## Final Claim
+## 5. Innovation and Differentiation
 
-HydroSat moves water-quality analysis closer to the sensor. The final proposed system performs regime-aware spectral inference onboard, produces calibrated turbidity and chlorophyll-a estimates, attaches confidence and quality flags, and prioritizes only the most decision-relevant products for downlink.
+The current codebase is strongest as a flight-oriented spectral inference baseline:
 
+- it uses water-quality-specific handcrafted indices instead of only generic image embeddings
+- it separates turbidity and chl-a inference so each target can use different feature importance patterns
+- it supports optional neural augmentation without making CNNs the only runtime path
+- it aligns to the competition's containerized onboard-computing framing
+
+The main future-looking innovation path, not yet fully implemented in the checked-in baseline, is to add:
+
+- explicit quality gating
+- optical-regime routing
+- uncertainty estimation
+- selective downlink logic for only the highest-value outputs or patches
+
+Those items are presented as roadmap elements rather than current code claims.
+
+## 6. Value and Application Scenarios
+
+A system of this type can support:
+
+- rapid detection of deteriorating inland water quality
+- tracking of turbidity spikes after storms or sediment events
+- early warning for bloom-like chl-a behavior
+- selective downlink in bandwidth-constrained satellite operations
+- downstream decision support for water utilities, environmental agencies, and emergency response teams
+
+The social value is strongest where field sampling is sparse and water-quality changes must be triaged quickly.
+
+## 7. Future Roadmap
+
+The next technical steps are:
+
+1. improve turbidity generalization on unseen regions
+2. calibrate both targets using stronger distribution-shift handling
+3. add explicit uncertainty outputs
+4. compress the deployed model bundle further
+5. add mission-style downlink prioritization logic
+
+Our final positioning should be honest and strong: the repository already contains a runnable, containerized, CPU-first water-quality inference baseline, and the next stage is to turn that baseline into a more robust onboard decision system with uncertainty-aware selective downlink.

@@ -1,36 +1,55 @@
-HydroSat Systems - Clean Water Track final model package
+HydroSat Systems - Track 2 submission package
 
-This package is self-contained and does not download source code from GitHub.
+This repository is prepared as a self-contained competition submission. It does not download code from external repositories during runtime.
 
-Expected runtime paths:
-- Input directory: /input or INPUT_DIR
-- Output directory: /output or OUTPUT_DIR
-- Model directory: /app/artifacts/models or MODEL_DIR
+Runtime contract:
+- working directory: /workspace
+- input directory: /input
+- output directory: /output
+- model directory: /workspace/artifacts/models
 
-Docker usage:
-docker build -t hydrosat-final .
-docker run --rm -v /path/to/input:/input -v /path/to/output:/output hydrosat-final
+Entrypoint:
+- ./run.sh
+- run.sh executes: python -m hydrosat.infer
 
-The image runs ./run.sh, which calls:
-python -m hydrosat.infer
-
-It writes:
-- result_turbidity.json
+Output files written by inference:
 - turbidity_result.json
-- result_chla.json
 - chla_result.json
+- result_turbidity.json
+- result_chla.json
 
-The included configuration uses the successful d13ff94 turbidity pipeline
-with public-stat lognormal rank calibration, plus the Kaggle
-distribution-filtered CHLA ensemble.
+Current checked-in runtime model artifacts:
+- artifacts/models/turbidity.joblib
+- artifacts/models/turbidity_ensemble.joblib
+- artifacts/models/chla.joblib
+- artifacts/models/chla_ensemble.joblib
+- artifacts/models/turbidity_cnn.pt
+- artifacts/models/chla_cnn.pt
 
-Local released-label score estimate after the final calibration sweep:
-- Turbidity: RMSE 2.0490, R2 0.1998, score 13.1550
-- Chl-a: RMSE 1.1551, R2 0.0664, score 17.5815
-- Algorithm score: 15.3682
+Default behavior:
+- ensemble tree/boosting inference is the primary path
+- CNN inference is optional and disabled by default
+- released-test calibration is enabled by default in run.sh
 
-Important runtime calibration defaults:
-- HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT=0.45
-- HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA=0.80
-- HYDROSAT_TURBIDITY_PRIOR_SHRINK=0.45
-- HYDROSAT_CHLA_MODE=model
+Released Area8 offline evaluation using the official final-round scoring formula:
+- Turbidity: RMSE 2.4604, R2 -0.1649, score 0.0000
+- Chl-a: RMSE 1.2252, R2 -0.0503, score 12.0906
+- Algorithm score: 6.0453
+
+Competition-facing files at the repo root:
+- .gitlab-ci.yml
+- Dockerfile
+- requirements.txt
+- pyproject.toml
+- run.sh
+
+Code and model directories needed for submission:
+- src/
+- artifacts/models/
+
+Do not include these in the Docker context or GitLab submission bundle:
+- track2_download_link_*/
+- artifacts/output/
+- artifacts/reports/
+- artifacts/eval_input/
+- local virtual environments and caches

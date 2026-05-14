@@ -1,17 +1,18 @@
 FROM 10.200.99.202:15080/zero2x002/competition-base:pytorch2.5.1-cuda12.1-cudnn9
 
-WORKDIR /app
+WORKDIR /workspace
 
-COPY . /app/
+COPY requirements.txt /workspace/requirements.txt
+RUN pip install --cache-dir /tmp/pip-cache -r /workspace/requirements.txt -i https://repo.huaweicloud.com/repository/pypi/simple
 
-RUN pip install --cache-dir /tmp/pip-cache -r requirements.txt -i https://repo.huaweicloud.com/repository/pypi/simple
+COPY . /workspace/
 
-RUN chmod +x run.sh
+RUN chmod +x /workspace/run.sh
 
-ENV PYTHONPATH=/app/src
+ENV PYTHONPATH=/workspace/src
 ENV INPUT_DIR=/input
 ENV OUTPUT_DIR=/output
-ENV MODEL_DIR=/app/artifacts/models
+ENV MODEL_DIR=/workspace/artifacts/models
 ENV HYDROSAT_ENABLE_CNN=0
 ENV HYDROSAT_CALIBRATE_TEST_STATS=1
 ENV HYDROSAT_CALIBRATE_TURBIDITY_TEST_STATS=1
@@ -33,4 +34,4 @@ ENV OMP_NUM_THREADS=1
 ENV OPENBLAS_NUM_THREADS=1
 ENV MKL_NUM_THREADS=1
 
-CMD ["./run.sh"]
+CMD ["/workspace/run.sh"]

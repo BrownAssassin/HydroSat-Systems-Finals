@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 
@@ -10,6 +11,9 @@ def find_train_csvs(data_root: Path) -> list[Path]:
 def find_image_for_row(csv_path: Path, filename: str) -> Path:
     area_dir = csv_path.parent
     candidates = [area_dir / f"{area_dir.name}_images" / filename]
+    image_root = os.environ.get("HYDROSAT_IMAGE_ROOT")
+    if image_root:
+        candidates.append(Path(image_root) / filename)
     area_prefix = filename.split("_", 1)[0]
     candidates.append(area_dir / f"{area_prefix}_images" / filename)
     candidates.extend(area_dir.glob(f"**/{filename}"))

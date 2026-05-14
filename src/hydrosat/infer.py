@@ -5,6 +5,7 @@ import json
 import math
 import os
 import traceback
+import warnings
 from pathlib import Path
 from statistics import NormalDist
 
@@ -12,6 +13,10 @@ os.environ.setdefault("LOKY_MAX_CPU_COUNT", "1")
 os.environ.setdefault("OMP_NUM_THREADS", "1")
 os.environ.setdefault("OPENBLAS_NUM_THREADS", "1")
 os.environ.setdefault("MKL_NUM_THREADS", "1")
+warnings.filterwarnings(
+    "ignore",
+    message="X does not have valid feature names, but LGBMRegressor was fitted with feature names",
+)
 
 import joblib
 import numpy as np
@@ -328,17 +333,20 @@ def heuristic_predictions(feat_df: pd.DataFrame, target: str) -> np.ndarray:
 
 def infer_csv(input_root: Path, csv_name: str, target: str, model_dir: Path, patch_size: int, progress_every: int) -> dict[str, list[float]]:
     csv_path = input_root / csv_name
-    df = pd.read_csv(csv_path)
+    df = pd.read_csv(csv_path, dtype={"filename": "string", "Lon": "string", "Lat": "string"})
+    df_numeric = df.copy()
+    df_numeric["Lon"] = pd.to_numeric(df_numeric["Lon"], errors="raise")
+    df_numeric["Lat"] = pd.to_numeric(df_numeric["Lat"], errors="raise")
 
     model_bundle = None
     try:
         model_bundle = load_model(model_dir, target)
         cnn_bundle = load_cnn(model_dir, target)
         features = []
-        for idx, (_, row) in enumerate(df.iterrows(), start=1):
+        for idx, (_, row) in enumerate(df_numeric.iterrows(), start=1):
             features.append(row_features(csv_path, row, patch_size=patch_size))
             if progress_every and idx % progress_every == 0:
-                print(f"{target}: extracted features for {idx}/{len(df)} points", flush=True)
+                print(f"{target}: extracted features for {idx}/{len(df_numeric)} points", flush=True)
         feat_df = pd.DataFrame(features)
         feat_df_model = neutralize_geo_leakage(feat_df, target)
         model_preds = predict_model(model_bundle, feat_df_model)
@@ -371,7 +379,7 @@ def infer_csv(input_root: Path, csv_name: str, target: str, model_dir: Path, pat
         cnn_score = cnn_rmse(cnn_bundle)
         if mode == "model" and cnn_bundle is not None and cnn_score is not None and (tree_score is None or cnn_score < tree_score):
             try:
-                preds = predict_cnn(cnn_bundle, csv_path, df)
+                preds = predict_cnn(cnn_bundle, csv_path, df_numeric)
                 print(f"{target}: using CNN prediction, cnn_rmse={cnn_score}, tree_rmse={tree_score}", flush=True)
             except Exception as exc:
                 print(f"{target}: CNN fallback to tree model after error: {exc}", flush=True)

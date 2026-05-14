@@ -1,13 +1,19 @@
 .git/
+.venv/
 .pip-cache/
 __pycache__/
 *.py[cod]
 .pytest_cache/
 .mypy_cache/
+.ruff_cache/
 
 track2_download_link_*/
-Round2 Project Submission Manual_en_0403.pdf
-slides_sample.pptx
+Hydro Sat Systems_Arv Bali_baliarv21@gmail.com/
+artifacts/eval_input/
 artifacts/features/
 artifacts/output/
+artifacts/reports/
+artifacts/models_v2/
+artifacts/models_cliptest/
 catboost_info/
+*.ipynb
