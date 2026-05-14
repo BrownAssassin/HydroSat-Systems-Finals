@@ -9,6 +9,7 @@ __pycache__/
 .ipynb_checkpoints/
 
 artifacts/eval_input/
+artifacts/experiments/
 artifacts/output/
 artifacts/reports/
 artifacts/features/

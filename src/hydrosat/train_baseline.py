@@ -23,6 +23,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.base import clone
 from sklearn.compose import TransformedTargetRegressor
 
+from .scoring import parameter_metrics
 
 META_COLUMNS = {
     "filename",
@@ -142,7 +143,7 @@ def train_one(df: pd.DataFrame, target: str, model_dir: Path, random_state: int,
 
     results = []
     best_name = None
-    best_score = float("inf")
+    best_selection_key = (float("inf"), float("-inf"))
     for name, model in candidate_models(random_state).items():
         print(f"training {target}/{name} on {len(part)} rows and {len(cols)} numeric features", flush=True)
         preds = np.zeros(len(part), dtype="float32")
@@ -150,11 +151,20 @@ def train_one(df: pd.DataFrame, target: str, model_dir: Path, random_state: int,
             pipe = make_pipeline(clone(model), cols, max_features=max_features)
             pipe.fit(X.iloc[train_idx], y[train_idx])
             preds[val_idx] = pipe.predict(X.iloc[val_idx])
-        score = rmse(y, preds)
-        result = {"target": target, "model": name, "rmse": score, "r2": float(r2_score(y, preds)), "rows": int(len(part))}
+        metrics = parameter_metrics(y, np.clip(preds, 0, None))
+        result = {
+            "target": target,
+            "model": name,
+            "rmse": metrics["rmse"],
+            "r2": metrics["r2"],
+            "nrmse": metrics["nrmse"],
+            "score": metrics["score"],
+            "rows": int(len(part)),
+        }
         results.append(result)
-        if score < best_score:
-            best_score = score
+        selection_key = (-result["score"], result["rmse"])
+        if selection_key < best_selection_key:
+            best_selection_key = selection_key
             best_name = name
 
     final_pipe = make_pipeline(candidate_models(random_state)[str(best_name)], cols, max_features=max_features)
@@ -166,7 +176,14 @@ def train_one(df: pd.DataFrame, target: str, model_dir: Path, random_state: int,
             "pipeline": final_pipe,
             "columns": cols,
             "target": target,
-            "summary": {"model": best_name, "rmse": best_result["rmse"], "r2": best_result["r2"], "group_by": group_by},
+            "summary": {
+                "model": best_name,
+                "rmse": best_result["rmse"],
+                "r2": best_result["r2"],
+                "nrmse": best_result["nrmse"],
+                "score": best_result["score"],
+                "group_by": group_by,
+            },
         },
         model_dir / f"{target}.joblib",
     )
@@ -190,7 +207,10 @@ def main() -> None:
     for target, info in summary.items():
         print(f"{target}: best={info['best']}")
         for row in info["results"]:
-            print(f"  {row['model']}: rmse={row['rmse']:.4f} r2={row['r2']:.4f} rows={row['rows']}")
+            print(
+                f"  {row['model']}: score={row['score']:.4f} rmse={row['rmse']:.4f} "
+                f"r2={row['r2']:.4f} nrmse={row['nrmse']:.4f} rows={row['rows']}"
+            )
 
 
 if __name__ == "__main__":

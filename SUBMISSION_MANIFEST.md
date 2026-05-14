@@ -1,8 +1,8 @@
 # Submission Manifest
 
-## Competition Submission Bundle
+## Final Competition Submission Bundle
 
-The final runnable submission bundle should contain:
+The final runnable GitLab submission bundle should contain:
 
 - `.gitattributes`
 - `.gitlab-ci.yml`
@@ -16,23 +16,42 @@ The final runnable submission bundle should contain:
 - `src/`
 - `artifacts/models/`
 
-These are the files and directories required to build the competition container and run inference on `/input`.
+That is the complete inference-only container payload needed to build the image and run Track 2 predictions on `/input`.
+
+## Frozen Runtime Contents
+
+Frozen runtime model files:
+
+- `artifacts/models/turbidity_ensemble.joblib`
+- `artifacts/models/chla_ensemble.joblib`
+
+Frozen runtime footprint:
+
+- `29.48 MB`
+
+Frozen released Area8 score:
+
+- Turbidity score: `6.0765`
+- Chl-a score: `19.2541`
+- Algorithm score: `12.6653`
 
 ## Local-Only Repo Assets
 
-The following are intentionally kept in the repository workspace for development, scoring, and presentation, but they are **not** part of the GitLab submission image:
+These stay in the development workspace but are **not** part of the submission image:
 
 - `track2_download_link_1/` to `track2_download_link_5/`
 - `artifacts/eval_input/`
 - `artifacts/output/`
 - `artifacts/reports/`
+- `artifacts/features/`
+- `artifacts/experiments/`
 - `Hydro Sat Systems_Arv Bali_baliarv21@gmail.com/`
 - `FINAL_TECHNICAL_PROPOSAL.md`
 - `scripts/build_proposal_deck.py`
 
-## Current Runnable Baseline
+## Runtime Contract
 
-Runtime entrypoint:
+Entrypoint:
 
 ```text
 ./run.sh
@@ -44,12 +63,14 @@ Primary runtime model location:
 artifacts/models/
 ```
 
-Current released Area8 offline evaluation:
+Default runtime behavior:
 
 ```text
-Turbidity score: 0.0000
-Chl-a score:     12.0906
-Algorithm score: 6.0453
+HYDROSAT_CALIBRATE_TEST_STATS=1
+HYDROSAT_TURBIDITY_MODE=blend
+HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT=0.81
+HYDROSAT_CHLA_MODE=model
+HYDROSAT_ENABLE_CNN=0
 ```
 
 ## Output Contract

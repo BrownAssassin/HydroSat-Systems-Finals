@@ -295,7 +295,7 @@ def rank_to_public_distribution(rank_score: np.ndarray, target: str) -> np.ndarr
 def blended_predictions(model_preds: np.ndarray, feat_df: pd.DataFrame, target: str) -> np.ndarray:
     if target == "turbidity":
         feature_score = _feature_rank_score(feat_df, TURBIDITY_RANK_FEATURES)
-        default_weight = 0.85
+        default_weight = 0.81
     elif target == "chla":
         feature_score = _feature_rank_score(feat_df, CHLA_RANK_FEATURES)
         default_weight = 0.25
@@ -353,8 +353,6 @@ def infer_csv(input_root: Path, csv_name: str, target: str, model_dir: Path, pat
         preds = model_preds
         default_mode = "blend" if target == "turbidity" else "model"
         mode = os.environ.get(f"HYDROSAT_{target.upper()}_MODE", os.environ.get("HYDROSAT_PREDICTION_MODE", default_mode))
-        if target == "turbidity" and mode == "model":
-            mode = "blend"
         print(
             f"{target}: inference mode={mode} "
             f"invert_rank={os.environ.get(f'HYDROSAT_{target.upper()}_INVERT_RANK', '0')} "
@@ -392,7 +390,7 @@ def infer_csv(input_root: Path, csv_name: str, target: str, model_dir: Path, pat
 
     calibrate = os.environ.get(
         f"HYDROSAT_CALIBRATE_{target.upper()}_TEST_STATS",
-        os.environ.get("HYDROSAT_CALIBRATE_TEST_STATS", "0"),
+        os.environ.get("HYDROSAT_CALIBRATE_TEST_STATS", "1"),
     )
     if calibrate == "1" and len(preds):
         preds = calibrate_to_test_stats(preds, target)

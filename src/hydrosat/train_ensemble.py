@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
 
 import joblib
@@ -10,6 +11,7 @@ from sklearn.base import clone
 from sklearn.metrics import r2_score
 from sklearn.model_selection import GroupKFold
 
+from .scoring import parameter_metrics
 from .train_baseline import candidate_models, feature_columns, make_pipeline, rmse, validation_groups
 
 
@@ -52,6 +54,25 @@ def _clip_fit_target(y: np.ndarray, upper_quantile: float | None) -> np.ndarray:
     return np.clip(y, 0, upper)
 
 
+def _selection_sort_key(row: dict[str, float], selection_metric: str) -> tuple[float, float, float]:
+    if selection_metric == "score":
+        return (-float(row["score"]), float(row["rmse"]), -float(row["r2"]))
+    return (float(row["rmse"]), -float(row["score"]), -float(row["r2"]))
+
+
+def _member_weights(selected: list[dict[str, float]], selection_metric: str) -> list[float]:
+    if not selected:
+        return []
+    if selection_metric == "score":
+        raw = [max(float(row["score"]), 0.0) + 1e-6 for row in selected]
+    else:
+        raw = [1.0 / max(float(row["rmse"]), 1e-6) for row in selected]
+    total = float(sum(raw))
+    if total <= 0:
+        return [1.0 / len(selected)] * len(selected)
+    return [value / total for value in raw]
+
+
 def train_target_ensemble(
     features_path: Path,
     target: str,
@@ -64,6 +85,8 @@ def train_target_ensemble(
     group_by: str,
     filter_test_range: bool,
     filter_range_padding: float,
+    selection_metric: str,
+    write_model: bool = True,
 ) -> dict:
     df = pd.read_csv(features_path)
     part = df[df["target"] == target].copy()
@@ -90,51 +113,86 @@ def train_target_ensemble(
             pipe.fit(X.iloc[train_idx], _clip_fit_target(y[train_idx], clip_quantile))
             preds[val_idx] = pipe.predict(X.iloc[val_idx])
         preds = np.clip(preds, 0, None)
+        metrics = parameter_metrics(y, preds)
         results.append(
             {
                 "name": name,
-                "rmse": rmse(y, preds),
-                "r2": float(r2_score(y, preds)),
+                "rmse": metrics["rmse"],
+                "r2": metrics["r2"],
+                "nrmse": metrics["nrmse"],
+                "score": metrics["score"],
                 "oof_pred": preds,
             }
         )
 
-    results.sort(key=lambda row: row["rmse"])
+    results.sort(key=lambda row: _selection_sort_key(row, selection_metric))
     selected = results[:top_n]
-    ensemble_pred = np.mean([row["oof_pred"] for row in selected], axis=0)
+    weights = _member_weights(selected, selection_metric)
+    ensemble_pred = np.average(
+        np.vstack([row["oof_pred"] for row in selected]),
+        axis=0,
+        weights=np.asarray(weights, dtype="float64"),
+    )
     ensemble_pred = np.clip(ensemble_pred, 0, None)
+    ensemble_metrics = parameter_metrics(y, ensemble_pred)
     summary = {
         "target": target,
         "features_path": str(features_path),
         "rows": int(len(part)),
         "columns": int(len(cols)),
-        "selected": [{"name": row["name"], "rmse": row["rmse"], "r2": row["r2"]} for row in selected],
-        "ensemble_rmse": rmse(y, ensemble_pred),
-        "ensemble_r2": float(r2_score(y, ensemble_pred)),
+        "selected": [
+            {
+                "name": row["name"],
+                "rmse": row["rmse"],
+                "r2": row["r2"],
+                "nrmse": row["nrmse"],
+                "score": row["score"],
+                "weight": weights[idx],
+            }
+            for idx, row in enumerate(selected)
+        ],
+        "candidate_results": [
+            {
+                "name": row["name"],
+                "rmse": row["rmse"],
+                "r2": row["r2"],
+                "nrmse": row["nrmse"],
+                "score": row["score"],
+            }
+            for row in results
+        ],
+        "ensemble_rmse": ensemble_metrics["rmse"],
+        "ensemble_r2": ensemble_metrics["r2"],
+        "ensemble_nrmse": ensemble_metrics["nrmse"],
+        "ensemble_score": ensemble_metrics["score"],
         "clip_quantile": clip_quantile,
         "max_features": max_features,
         "group_by": group_by,
+        "selection_metric": selection_metric,
+        "filter_test_range": bool(filter_test_range),
+        "filter_range_padding": float(filter_range_padding),
     }
 
     members = []
-    y_fit = _clip_fit_target(y, clip_quantile)
-    for row in selected:
-        name = row["name"]
-        print(f"fitting final {target}/{name}", flush=True)
-        pipe = make_pipeline(clone(models[name]), cols, max_features=max_features)
-        pipe.fit(X, y_fit)
-        members.append({"name": name, "pipeline": pipe, "columns": cols})
+    if write_model:
+        y_fit = _clip_fit_target(y, clip_quantile)
+        for idx, row in enumerate(selected):
+            name = row["name"]
+            print(f"fitting final {target}/{name}", flush=True)
+            pipe = make_pipeline(clone(models[name]), cols, max_features=max_features)
+            pipe.fit(X, y_fit)
+            members.append({"name": name, "pipeline": pipe, "columns": cols, "weight": weights[idx]})
 
-    model_dir.mkdir(parents=True, exist_ok=True)
-    joblib.dump(
-        {
-            "kind": "ensemble",
-            "target": target,
-            "members": members,
-            "summary": summary,
-        },
-        model_dir / f"{target}_ensemble.joblib",
-    )
+        model_dir.mkdir(parents=True, exist_ok=True)
+        joblib.dump(
+            {
+                "kind": "ensemble",
+                "target": target,
+                "members": members,
+                "summary": summary,
+            },
+            model_dir / f"{target}_ensemble.joblib",
+        )
     return summary
 
 
@@ -151,6 +209,9 @@ def main() -> None:
     parser.add_argument("--turbidity-clip-quantile", type=float, default=None)
     parser.add_argument("--filter-test-range", action="store_true")
     parser.add_argument("--filter-range-padding", type=float, default=0.05)
+    parser.add_argument("--selection-metric", choices=["score", "rmse"], default="score")
+    parser.add_argument("--summary-out", type=Path, default=None)
+    parser.add_argument("--no-write-models", action="store_true")
     parser.add_argument("--turbidity-models", default=",".join(DEFAULT_MODELS["turbidity"]))
     parser.add_argument("--chla-models", default=",".join(DEFAULT_MODELS["chla"]))
     args = parser.parse_args()
@@ -170,6 +231,8 @@ def main() -> None:
                 args.group_by,
                 args.filter_test_range,
                 args.filter_range_padding,
+                args.selection_metric,
+                write_model=not args.no_write_models,
             )
         )
     if args.target in {"chla", "both"}:
@@ -186,13 +249,25 @@ def main() -> None:
                 args.group_by,
                 args.filter_test_range,
                 args.filter_range_padding,
+                args.selection_metric,
+                write_model=not args.no_write_models,
             )
         )
 
     for summary in summaries:
-        print(f"\n{summary['target']} ensemble: rmse={summary['ensemble_rmse']:.4f} r2={summary['ensemble_r2']:.4f}")
+        print(
+            f"\n{summary['target']} ensemble: "
+            f"score={summary['ensemble_score']:.4f} rmse={summary['ensemble_rmse']:.4f} "
+            f"r2={summary['ensemble_r2']:.4f} nrmse={summary['ensemble_nrmse']:.4f}"
+        )
         for row in summary["selected"]:
-            print(f"  {row['name']}: rmse={row['rmse']:.4f} r2={row['r2']:.4f}")
+            print(
+                f"  {row['name']}: score={row['score']:.4f} rmse={row['rmse']:.4f} "
+                f"r2={row['r2']:.4f} nrmse={row['nrmse']:.4f} weight={row['weight']:.4f}"
+            )
+    if args.summary_out is not None:
+        args.summary_out.parent.mkdir(parents=True, exist_ok=True)
+        args.summary_out.write_text(json.dumps({"summaries": summaries}, indent=2), encoding="utf-8")
 
 
 if __name__ == "__main__":

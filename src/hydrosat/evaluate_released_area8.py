@@ -6,9 +6,9 @@ import os
 from pathlib import Path
 
 import pandas as pd
-from sklearn.metrics import r2_score, root_mean_squared_error
 
 from .infer import infer_csv
+from .scoring import parameter_metrics, pair_summary
 
 
 def parse_prediction_key(key: str) -> tuple[str, str, str]:
@@ -58,20 +58,7 @@ def score_predictions(truth: dict[str, float], predictions: dict[str, list[float
     ordered_keys = list(truth_map.keys())
     y_true = [truth_map[key] for key in ordered_keys]
     y_pred = [prediction_map[key] for key in ordered_keys]
-
-    rmse = float(root_mean_squared_error(y_true, y_pred))
-    r2 = float(r2_score(y_true, y_pred))
-    mean_truth = float(sum(y_true) / len(y_true))
-    nrmse = float(rmse / mean_truth) if mean_truth else float("inf")
-    score = float((0.5 * max(0.0, r2) + 0.5 * max(0.0, 1.0 - nrmse)) * 100.0)
-    return {
-        "count": int(len(y_true)),
-        "rmse": rmse,
-        "r2": r2,
-        "mean_truth": mean_truth,
-        "nrmse": nrmse,
-        "score": score,
-    }
+    return parameter_metrics(y_true, y_pred)
 
 
 def write_prediction_outputs(output_dir: Path, turbidity: dict[str, list[float]], chla: dict[str, list[float]]) -> None:
@@ -84,48 +71,46 @@ def write_prediction_outputs(output_dir: Path, turbidity: dict[str, list[float]]
     (output_dir / "result_chla.json").write_text(chla_text, encoding="utf-8")
 
 
-def main() -> None:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--released-root", type=Path, default=Path("track2_download_link_1"))
-    parser.add_argument("--model-dir", type=Path, default=Path("artifacts/models"))
-    parser.add_argument("--work-dir", type=Path, default=Path("artifacts/eval_input/released_area8"))
-    parser.add_argument("--output-dir", type=Path, default=Path("artifacts/output/released_area8"))
-    parser.add_argument("--report-dir", type=Path, default=Path("artifacts/reports/released_area8"))
-    parser.add_argument("--patch-size", type=int, default=32)
-    parser.add_argument("--progress-every", type=int, default=1000)
-    args = parser.parse_args()
+def evaluate_released_area8(
+    released_root: Path,
+    model_dir: Path,
+    work_dir: Path,
+    output_dir: Path,
+    report_dir: Path,
+    patch_size: int,
+    progress_every: int,
+) -> dict[str, object]:
+    work_dir.mkdir(parents=True, exist_ok=True)
+    report_dir.mkdir(parents=True, exist_ok=True)
 
-    args.work_dir.mkdir(parents=True, exist_ok=True)
-    args.report_dir.mkdir(parents=True, exist_ok=True)
-
-    turb_truth_path = args.released_root / "track2_turb_test_true.json"
-    chla_truth_path = args.released_root / "track2_cha_test_true.json"
-    image_root = args.released_root / "area8_images"
+    turb_truth_path = released_root / "track2_turb_test_true.json"
+    chla_truth_path = released_root / "track2_cha_test_true.json"
+    image_root = released_root / "area8_images"
 
     turb_truth = json.loads(turb_truth_path.read_text(encoding="utf-8"))
     chla_truth = json.loads(chla_truth_path.read_text(encoding="utf-8"))
 
-    build_eval_csv(turb_truth, "turbidity", args.work_dir)
-    build_eval_csv(chla_truth, "chla", args.work_dir)
+    build_eval_csv(turb_truth, "turbidity", work_dir)
+    build_eval_csv(chla_truth, "chla", work_dir)
 
     old_image_root = os.environ.get("HYDROSAT_IMAGE_ROOT")
     os.environ["HYDROSAT_IMAGE_ROOT"] = str(image_root)
     try:
         turb_predictions = infer_csv(
-            args.work_dir,
+            work_dir,
             "track2_turb_test_point.csv",
             "turbidity",
-            args.model_dir,
-            args.patch_size,
-            args.progress_every,
+            model_dir,
+            patch_size,
+            progress_every,
         )
         chla_predictions = infer_csv(
-            args.work_dir,
+            work_dir,
             "track2_cha_test_point.csv",
             "chla",
-            args.model_dir,
-            args.patch_size,
-            args.progress_every,
+            model_dir,
+            patch_size,
+            progress_every,
         )
     finally:
         if old_image_root is None:
@@ -133,22 +118,18 @@ def main() -> None:
         else:
             os.environ["HYDROSAT_IMAGE_ROOT"] = old_image_root
 
-    write_prediction_outputs(args.output_dir, turb_predictions, chla_predictions)
+    write_prediction_outputs(output_dir, turb_predictions, chla_predictions)
 
     turbidity_metrics = score_predictions(turb_truth, turb_predictions)
     chla_metrics = score_predictions(chla_truth, chla_predictions)
-    algorithm_score = 0.5 * turbidity_metrics["score"] + 0.5 * chla_metrics["score"]
-
     summary = {
-        "released_root": str(args.released_root.resolve()),
+        "released_root": str(released_root.resolve()),
         "image_root": str(image_root.resolve()),
-        "model_dir": str(args.model_dir.resolve()),
-        "work_dir": str(args.work_dir.resolve()),
-        "output_dir": str(args.output_dir.resolve()),
-        "report_dir": str(args.report_dir.resolve()),
-        "turbidity": turbidity_metrics,
-        "chla": chla_metrics,
-        "algorithm_score": float(algorithm_score),
+        "model_dir": str(model_dir.resolve()),
+        "work_dir": str(work_dir.resolve()),
+        "output_dir": str(output_dir.resolve()),
+        "report_dir": str(report_dir.resolve()),
+        **pair_summary(turbidity_metrics, chla_metrics),
         "scoring_formula": {
             "nrmse": "rmse / mean_truth",
             "parameter_score": "(0.5 * max(0, r2) + 0.5 * max(0, 1 - nrmse)) * 100",
@@ -156,7 +137,7 @@ def main() -> None:
         },
     }
 
-    (args.report_dir / "released_area8_scores.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    (report_dir / "released_area8_scores.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
     report_md = "\n".join(
         [
             "# Released Area8 Local Evaluation",
@@ -181,11 +162,34 @@ def main() -> None:
             f"- Score: {chla_metrics['score']:.4f}",
             "",
             "## Final",
-            f"- Algorithm score: {algorithm_score:.4f}",
+            f"- Algorithm score: {summary['algorithm_score']:.4f}",
         ]
     )
-    (args.report_dir / "released_area8_scores.md").write_text(report_md, encoding="utf-8")
-    print(report_md)
+    (report_dir / "released_area8_scores.md").write_text(report_md, encoding="utf-8")
+    return summary
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--released-root", type=Path, default=Path("track2_download_link_1"))
+    parser.add_argument("--model-dir", type=Path, default=Path("artifacts/models"))
+    parser.add_argument("--work-dir", type=Path, default=Path("artifacts/eval_input/released_area8"))
+    parser.add_argument("--output-dir", type=Path, default=Path("artifacts/output/released_area8"))
+    parser.add_argument("--report-dir", type=Path, default=Path("artifacts/reports/released_area8"))
+    parser.add_argument("--patch-size", type=int, default=32)
+    parser.add_argument("--progress-every", type=int, default=1000)
+    args = parser.parse_args()
+
+    summary = evaluate_released_area8(
+        released_root=args.released_root,
+        model_dir=args.model_dir,
+        work_dir=args.work_dir,
+        output_dir=args.output_dir,
+        report_dir=args.report_dir,
+        patch_size=args.patch_size,
+        progress_every=args.progress_every,
+    )
+    print((args.report_dir / "released_area8_scores.md").read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":

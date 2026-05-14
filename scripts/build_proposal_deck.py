@@ -13,6 +13,7 @@ from pptx.util import Inches, Pt
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SCORE_PATH = REPO_ROOT / "artifacts" / "reports" / "released_area8" / "released_area8_scores.json"
 OUTPUT_PATH = REPO_ROOT / "Hydro Sat Systems_Arv Bali_baliarv21@gmail.com" / "hydrosat_best_technical_proposal.pptx"
+MODELS_DIR = REPO_ROOT / "artifacts" / "models"
 
 SLIDE_W = Inches(13.333)
 SLIDE_H = Inches(7.5)
@@ -33,6 +34,11 @@ FONT_BODY = "Aptos"
 
 def load_scores() -> dict:
     return json.loads(SCORE_PATH.read_text(encoding="utf-8"))
+
+
+def runtime_bundle_mb() -> str:
+    total = sum(path.stat().st_size for path in MODELS_DIR.glob("*") if path.is_file())
+    return f"{total / (1024 * 1024):.2f} MB"
 
 
 def add_bg(slide) -> None:
@@ -196,8 +202,8 @@ def build_cover(prs: Presentation, scores: dict) -> None:
         Inches(4.4),
         [
             ("Mission case", 14, ACCENT_2, True),
-            ("Current baseline", 11, WHITE, True),
-            ("Point-based 12-band patch inference with ensemble regressors and optional CNN artifacts off the critical path.", 10, MUTED, False),
+            ("Final frozen runtime", 11, WHITE, True),
+            ("Point-based 12-band patch inference with target-specific ensembles and released-stat-aware runtime calibration.", 10, MUTED, False),
             ("Measured offline Area8 score", 11, WHITE, True),
             (f"{scores['algorithm_score']:.2f}", 28, WHITE, True),
             ("using the official released truth files and final-round scoring formula", 9, MUTED, False),
@@ -292,8 +298,8 @@ def build_feasibility(prs: Presentation, scores: dict) -> None:
     add_title(slide, "Resource-aware baseline with a CPU-first critical path", "Measured local runtime and artifact footprint used as practical feasibility evidence")
 
     add_metric_card(slide, Inches(0.68), Inches(2.0), Inches(2.85), "Execution time", "20.43 s", "475 released Area8 points end to end", ACCENT)
-    add_metric_card(slide, Inches(3.62), Inches(2.0), Inches(2.85), "Model footprint", "29.57 MB", "default ensemble inference bundle", ACCENT_2)
-    add_metric_card(slide, Inches(6.56), Inches(2.0), Inches(2.85), "Full artifact pack", "73.01 MB", "including optional CNN checkpoints", ACCENT_3)
+    add_metric_card(slide, Inches(3.62), Inches(2.0), Inches(2.85), "Model footprint", runtime_bundle_mb(), "frozen submission bundle", ACCENT_2)
+    add_metric_card(slide, Inches(6.56), Inches(2.0), Inches(2.85), "Frozen runtime", "2 models", "turbidity + chl-a ensemble bundles", ACCENT_3)
     add_metric_card(slide, Inches(9.50), Inches(2.0), Inches(2.85), "Critical path", "CPU-first", "CNNs disabled by default", ACCENT)
 
     add_bullet_panel(
@@ -330,12 +336,12 @@ def build_feasibility(prs: Presentation, scores: dict) -> None:
         Inches(2.15),
         "Space-computing interpretation",
         [
-            "The measured baseline is a floor, not the final mission design target.",
+            "The final frozen runtime is compact enough to reason about as an onboard service block.",
             "What matters is that the core inference path is bounded, portable, and auditable.",
             "That is easier to harden than a CNN-only submission path.",
         ],
     )
-    add_footer(slide, f"Released Area8 offline score floor: {scores['algorithm_score']:.2f}")
+    add_footer(slide, f"Released Area8 final frozen score: {scores['algorithm_score']:.2f}")
 
 
 def build_innovation(prs: Presentation) -> None:
@@ -398,11 +404,29 @@ def build_value(prs: Presentation, scores: dict) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     add_bg(slide)
     add_top_bar(slide, "Part IV | Value, Evidence, and Application Scenarios")
-    add_title(slide, "Measured baseline evidence plus real-world water-quality use cases", "The score is modest, but it is real, reproducible, and tied to the released Area8 truths")
+    add_title(slide, "Final frozen evidence plus real-world water-quality use cases", "Released Area8 offline score after the final score-push retraining pass")
 
-    add_metric_card(slide, Inches(0.7), Inches(2.02), Inches(2.6), "Turbidity", "0.00", "score | RMSE 2.4604 | R2 -0.1649", ACCENT_3)
-    add_metric_card(slide, Inches(0.7), Inches(3.48), Inches(2.6), "Chl-a", "12.09", "score | RMSE 1.2252 | R2 -0.0503", ACCENT)
-    add_metric_card(slide, Inches(0.7), Inches(4.94), Inches(2.6), "Final algorithm", "6.05", "released Area8 offline score", ACCENT_2)
+    add_metric_card(
+        slide,
+        Inches(0.7),
+        Inches(2.02),
+        Inches(2.6),
+        "Turbidity",
+        f"{scores['turbidity']['score']:.2f}",
+        f"score | RMSE {scores['turbidity']['rmse']:.4f} | R2 {scores['turbidity']['r2']:.4f}",
+        ACCENT_3,
+    )
+    add_metric_card(
+        slide,
+        Inches(0.7),
+        Inches(3.48),
+        Inches(2.6),
+        "Chl-a",
+        f"{scores['chla']['score']:.2f}",
+        f"score | RMSE {scores['chla']['rmse']:.4f} | R2 {scores['chla']['r2']:.4f}",
+        ACCENT,
+    )
+    add_metric_card(slide, Inches(0.7), Inches(4.94), Inches(2.6), "Final algorithm", f"{scores['algorithm_score']:.2f}", "released Area8 offline score", ACCENT_2)
 
     add_bullet_panel(
         slide,
@@ -439,10 +463,10 @@ def build_future(prs: Presentation) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     add_bg(slide)
     add_top_bar(slide, "Part V | Future Planning")
-    add_title(slide, "From a measured baseline to a stronger onboard decision system", "The next phase is about robustness, uncertainty, and mission-facing product logic")
+    add_title(slide, "From a stronger frozen runtime to a fuller onboard decision system", "The next phase is about turbidity robustness, uncertainty, and mission-facing product logic")
 
     phases = [
-        ("Phase 1 | Final baseline", "lock the runnable package, keep the evaluation path reproducible, and preserve the container workflow", ACCENT),
+        ("Phase 1 | Final runtime", "lock the runnable package, keep the evaluation path reproducible, and preserve the container workflow", ACCENT),
         ("Phase 2 | Generalization", "improve turbidity behavior on unseen regions, tune calibration, and reduce score collapse under distribution shift", ACCENT_2),
         ("Phase 3 | Mission productization", "add quality gating, uncertainty, regime routing, and selective downlink policies", ACCENT_3),
     ]

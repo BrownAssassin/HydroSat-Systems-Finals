@@ -2,107 +2,137 @@
 
 ## 1. Mission Fit
 
-HydroSat is designed for the Clean Water final-round task: estimate turbidity and chlorophyll-a from multi-band satellite imagery while staying compatible with an onboard-computing context. The implemented baseline favors a small, auditable, CPU-first inference path rather than a GPU-only design, because the competition brief emphasizes constrained space-computing environments.
+HydroSat is built for the final-round Clean Water task: estimate turbidity and chlorophyll-a from multispectral satellite imagery in a way that can still make sense in a space-computing context. Instead of treating the challenge as only a leaderboard regression problem, we frame it as a compact onboard inference problem:
 
-## 2. Implemented Baseline System
+```text
+mounted point requests + mounted multispectral scenes
+-> bounded local patch extraction
+-> target-specific water-quality inference
+-> compact JSON products for rapid decision support
+```
 
-The checked-in system is a deterministic inference pipeline:
+That framing matters because the organizers explicitly asked teams to consider on-orbit compute constraints, deployment practicality, and efficient inference.
+
+## 2. Final Implemented Baseline
+
+The final frozen repository runtime is a CPU-first inference pipeline with the following structure:
 
 ```text
 point table + 12-band GeoTIFF
--> point-centered patch extraction
--> spectral and spatial feature generation
+-> 32x32 point-centered patch extraction
+-> spectral, ratio, spatial, and seasonal feature generation
 -> target-specific ensemble regressors
--> calibration and clipping
--> JSON output packaging
+-> released-stat calibration
+-> Track 2 JSON output packaging
 ```
 
 What is implemented in the repository today:
 
-- point-centered patch extraction from Sentinel-style 12-band TIFFs
-- 32x32 patch-based handcrafted spectral and texture features
-- separate turbidity and chl-a inference paths
-- ensemble `.joblib` models as the default runtime path
-- optional CNN artifacts retained outside the critical path
-- Dockerized execution for `/input`, `/output`, and `/workspace`
+- point-centered patch extraction from 12-band TIFF imagery
+- handcrafted water-quality-oriented feature generation
+- separate turbidity and chlorophyll-a model paths
+- final ensemble `.joblib` runtime bundle under `artifacts/models/`
+- containerized execution for `/input`, `/output`, and `/workspace`
+- released-Area8 local evaluator using the official final-round formula
+- score-push sweep tooling for reproducible retraining and comparison
 
-The current feature builder emits about `1073` features per point, with `1070` numeric features.
+The final frozen runtime path uses:
 
-## 3. Measured Local Evidence
+- patch size: `32`
+- selected retrain experiment: `area_filter10_score`
+- area-grouped selection for the deployment candidate
+- turbidity runtime mode: `blend`
+- turbidity blend weight: `0.81`
+- released-stat calibration enabled for both targets
 
-After the organizers released the full Area8 image bundle and truth JSONs, the repository was evaluated offline using the official final-round scoring formula from the task PDF:
+## 3. Measured Final Evidence
+
+After the organizers released the full Area8 image bundle and truth JSONs, we ran a full offline evaluation using the official final-round scoring formula:
 
 - `NRMSE = RMSE / mean_truth`
 - `parameter_score = (0.5 * max(0, R2) + 0.5 * max(0, 1 - NRMSE)) * 100`
 - `algorithm_score = 0.5 * turbidity_score + 0.5 * chla_score`
 
-Measured results from `python -m hydrosat.evaluate_released_area8`:
+Final frozen results from `python -m hydrosat.evaluate_released_area8`:
 
-- Turbidity: `RMSE 2.4604`, `R2 -0.1649`, `score 0.0000`
-- Chl-a: `RMSE 1.2252`, `R2 -0.0503`, `score 12.0906`
-- Final algorithm score: `6.0453`
+- Turbidity: `RMSE 2.1440`, `R2 0.1155`, `NRMSE 0.9940`, `score 6.0765`
+- Chl-a: `RMSE 1.1400`, `R2 0.0906`, `NRMSE 0.7055`, `score 19.2541`
+- Final algorithm score: `12.6653`
 
-The released Area8 evaluation processed:
+This is a substantial improvement over the earlier frozen local baseline of `6.0453`.
+
+Released Area8 evaluation workload:
 
 - `372` turbidity points
 - `103` chl-a points
 - `475` total points
 
-Runtime on this local RTX 5070 laptop workflow was about `20.43` seconds end to end. The default ensemble inference bundle is about `29.57 MB`, while the full checked-in model folder including optional CNN artifacts is about `73.01 MB`.
+Final runtime footprint:
 
-## 4. On-Orbit Feasibility
+- frozen runtime model bundle: `29.48 MB`
 
-The implemented baseline is more plausible for on-orbit deployment than a CNN-only stack because:
+## 4. Why This Is Feasible For On-Orbit Computing
 
-- the critical path does not require GPU acceleration
-- serialized ensemble weights are compact compared with large end-to-end vision models
-- inference streams point rows and local patches instead of retaining whole-scene tensors in memory
-- the execution path is deterministic, bounded, and easy to audit
+The final critical path is intentionally CPU-first:
 
-In a mission setting, this style of model can support:
+- it does not require CNN inference to succeed
+- it ships compact pretrained ensemble artifacts instead of a large end-to-end vision stack
+- it processes point requests and local patches, not full-scene tensors on the main path
+- it produces compact JSON products instead of large derived raster payloads
 
-- onboard request-table processing
-- compact downlink of water-quality products rather than full-scene imagery
-- fallback-safe execution when accelerators are unavailable
+From a mission perspective, this supports a reasonable onboard interpretation:
 
-## 5. Innovation and Differentiation
+- ingest requested coordinates
+- read only the needed local pixels
+- infer water-quality indicators
+- downlink compact products for faster triage
 
-The current codebase is strongest as a flight-oriented spectral inference baseline:
+This is not yet a flight-qualified system, but it is a much more portable and auditable baseline than a GPU-only submission path.
 
-- it uses water-quality-specific handcrafted indices instead of only generic image embeddings
-- it separates turbidity and chl-a inference so each target can use different feature importance patterns
-- it supports optional neural augmentation without making CNNs the only runtime path
-- it aligns to the competition's containerized onboard-computing framing
+## 5. Innovation And Differentiation
 
-The main future-looking innovation path, not yet fully implemented in the checked-in baseline, is to add:
+The strongest innovation in HydroSat is not a single large deep model. It is the way the inference path is structured for bounded execution and water-quality specificity.
 
-- explicit quality gating
-- optical-regime routing
-- uncertainty estimation
-- selective downlink logic for only the highest-value outputs or patches
+Current differentiators:
 
-Those items are presented as roadmap elements rather than current code claims.
+- handcrafted spectral indices tailored to water-quality behavior rather than generic image embeddings alone
+- separate turbidity and chlorophyll-a modeling paths
+- explicit score-push retraining workflow focused on unseen-area behavior
+- optional CNN path kept outside the default runtime dependency chain
+- deterministic containerized input and output contract aligned to the competition platform
 
-## 6. Value and Application Scenarios
+This makes HydroSat different from a purely ground-first workflow where whole scenes are downlinked first and interpreted later.
 
-A system of this type can support:
+## 6. Application Value
 
-- rapid detection of deteriorating inland water quality
-- tracking of turbidity spikes after storms or sediment events
-- early warning for bloom-like chl-a behavior
-- selective downlink in bandwidth-constrained satellite operations
-- downstream decision support for water utilities, environmental agencies, and emergency response teams
+HydroSat can support several practical water-quality scenarios:
 
-The social value is strongest where field sampling is sparse and water-quality changes must be triaged quickly.
+- rapid triage of turbidity spikes after storms or sediment events
+- chlorophyll-a driven bloom surveillance
+- faster prioritization of field verification in data-sparse regions
+- compact product downlink when bandwidth is the bottleneck
+- satellite-ground workflows where only the most decision-relevant outputs should be transmitted first
 
-## 7. Future Roadmap
+The social value is strongest in settings where in situ sampling is sparse and water-quality changes need early warning rather than perfect retrospective mapping.
 
-The next technical steps are:
+## 7. Honest Final Positioning
 
-1. improve turbidity generalization on unseen regions
-2. calibrate both targets using stronger distribution-shift handling
-3. add explicit uncertainty outputs
-4. compress the deployed model bundle further
-5. add mission-style downlink prioritization logic
+Our final positioning is intentionally honest:
 
-Our final positioning should be honest and strong: the repository already contains a runnable, containerized, CPU-first water-quality inference baseline, and the next stage is to turn that baseline into a more robust onboard decision system with uncertainty-aware selective downlink.
+- the repository now contains a real, reproducible, container-ready final runtime
+- the released-Area8 local score improved materially through retraining and controlled runtime calibration
+- turbidity remains the harder target under geographic shift, so further gains should focus there first
+
+## 8. Future Roadmap
+
+The roadmap now starts from a stronger frozen baseline rather than from a partial prototype.
+
+Priority next steps:
+
+1. improve turbidity robustness on unseen regions and optical regimes
+2. add explicit uncertainty or quality flags
+3. introduce regime-aware routing or confidence-gated inference
+4. further compress the deployment bundle
+5. add mission-facing selective downlink logic
+
+So the current repository should be understood as a compact operational baseline today and a platform for a more capable onboard water-intelligence system next.
