@@ -235,7 +235,7 @@ def build_architecture(prs: Presentation) -> None:
 
     step_titles = [
         ("1. Input", "CSV request rows + area8 TIFF scenes"),
-        ("2. Patch", "32x32 crops centered on Lon/Lat"),
+        ("2. Patch", "24x24 crops centered on Lon/Lat"),
         ("3. Features", "1073 spectral, spatial, and seasonal descriptors"),
         ("4. Predict", "Target-specific ensemble regressors"),
         ("5. Calibrate", "Public-stat-aware clipping and ranking logic"),
@@ -297,7 +297,7 @@ def build_feasibility(prs: Presentation, scores: dict) -> None:
     add_top_bar(slide, "Part II | On-Orbit Implementation Feasibility")
     add_title(slide, "Resource-aware baseline with a CPU-first critical path", "Measured local runtime and artifact footprint used as practical feasibility evidence")
 
-    add_metric_card(slide, Inches(0.68), Inches(2.0), Inches(2.85), "Execution time", "20.43 s", "475 released Area8 points end to end", ACCENT)
+    add_metric_card(slide, Inches(0.68), Inches(2.0), Inches(2.85), "Execution time", "25.23 s", "475 released Area8 points end to end", ACCENT)
     add_metric_card(slide, Inches(3.62), Inches(2.0), Inches(2.85), "Model footprint", runtime_bundle_mb(), "frozen submission bundle", ACCENT_2)
     add_metric_card(slide, Inches(6.56), Inches(2.0), Inches(2.85), "Frozen runtime", "2 models", "turbidity + chl-a ensemble bundles", ACCENT_3)
     add_metric_card(slide, Inches(9.50), Inches(2.0), Inches(2.85), "Critical path", "CPU-first", "CNNs disabled by default", ACCENT)

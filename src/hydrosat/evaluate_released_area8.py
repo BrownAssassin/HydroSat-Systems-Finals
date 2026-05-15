@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from .infer import infer_csv
+from .infer import infer_csv, load_runtime_defaults
 from .scoring import parameter_metrics, pair_summary
 
 
@@ -176,9 +176,11 @@ def main() -> None:
     parser.add_argument("--work-dir", type=Path, default=Path("artifacts/eval_input/released_area8"))
     parser.add_argument("--output-dir", type=Path, default=Path("artifacts/output/released_area8"))
     parser.add_argument("--report-dir", type=Path, default=Path("artifacts/reports/released_area8"))
-    parser.add_argument("--patch-size", type=int, default=32)
+    parser.add_argument("--patch-size", type=int)
     parser.add_argument("--progress-every", type=int, default=1000)
     args = parser.parse_args()
+    runtime_defaults = load_runtime_defaults(args.model_dir)
+    patch_size = args.patch_size if args.patch_size is not None else int(runtime_defaults.get("patch_size", 32))
 
     summary = evaluate_released_area8(
         released_root=args.released_root,
@@ -186,7 +188,7 @@ def main() -> None:
         work_dir=args.work_dir,
         output_dir=args.output_dir,
         report_dir=args.report_dir,
-        patch_size=args.patch_size,
+        patch_size=patch_size,
         progress_every=args.progress_every,
     )
     print((args.report_dir / "released_area8_scores.md").read_text(encoding="utf-8"))

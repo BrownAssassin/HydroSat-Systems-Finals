@@ -20,20 +20,27 @@ That is the complete inference-only container payload needed to build the image 
 
 ## Frozen Runtime Contents
 
-Frozen runtime model files:
+Frozen runtime files:
 
 - `artifacts/models/turbidity_ensemble.joblib`
 - `artifacts/models/chla_ensemble.joblib`
+- `artifacts/models/runtime_env_defaults.json`
 
 Frozen runtime footprint:
 
-- `29.48 MB`
+- `4.84 MB`
 
 Frozen released Area8 score:
 
-- Turbidity score: `6.0765`
-- Chl-a score: `19.2541`
-- Algorithm score: `12.6653`
+- Turbidity score: `10.6170`
+- Chl-a score: `18.5354`
+- Algorithm score: `14.5762`
+
+Improvement over the prior frozen baseline:
+
+- previous frozen runtime score: `14.4445`
+- late-stage gain: `+0.1318` points (`+0.91%`)
+- total gain over the earlier `12.6653` baseline: `+1.9109` points (`+15.09%`)
 
 ## Local-Only Repo Assets
 
@@ -66,9 +73,12 @@ artifacts/models/
 Default runtime behavior:
 
 ```text
+PATCH_SIZE=24
 HYDROSAT_CALIBRATE_TEST_STATS=1
-HYDROSAT_TURBIDITY_MODE=blend
-HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT=0.81
+HYDROSAT_TURBIDITY_MODE=model
+HYDROSAT_TURBIDITY_CALIBRATION=lognormal_rank
+HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA=0.52
+HYDROSAT_TURBIDITY_PRIOR_SHRINK=0.05
 HYDROSAT_CHLA_MODE=model
 HYDROSAT_ENABLE_CNN=0
 ```

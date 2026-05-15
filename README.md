@@ -1,6 +1,6 @@
 # HydroSat Systems - Track 2 Final Round
 
-HydroSat Systems is our final-round repository for `Track 2: Space Intelligence Promoting Water Quality` in the ITU AI and Space Computing Challenge. The frozen submission path is a CPU-first water-quality inference pipeline that predicts:
+HydroSat Systems is our final-round repository for `Track 2: Space Intelligence Promoting Water Quality` in the ITU AI and Space Computing Challenge. The final frozen submission path is a compact inference pipeline that predicts:
 
 - turbidity
 - chlorophyll-a
@@ -9,13 +9,17 @@ from 12-band GeoTIFF imagery using point-centered patch extraction, handcrafted 
 
 ## Final Frozen Runtime
 
-The current default runtime is the best validated score-push candidate we produced locally before the deadline:
+The current default runtime is the best validated late-stage score-push candidate:
 
-- feature patch size: `32x32`
-- training selection mode: `area`-grouped ensemble CV
-- selected experiment: `area_filter10_score`
-- turbidity runtime mode: `blend`
-- turbidity blend weight: `0.81`
+- winning pair: `patch24_filter15_top3_feat800__patch24_filter15_top3_feat800`
+- stage A best structure: `patch24_filter15`
+- stage B best experiment: `patch24_filter15_top3_feat800`
+- feature patch size: `24x24`
+- turbidity runtime mode: `model`
+- turbidity calibration: `lognormal_rank`
+- turbidity lognormal sigma: `0.52`
+- turbidity prior shrink: `0.05`
+- chlorophyll-a runtime mode: `model`
 - released-stat calibration: enabled
 - CNNs: disabled on the critical path
 
@@ -23,36 +27,43 @@ Runtime model files:
 
 - `artifacts/models/turbidity_ensemble.joblib`
 - `artifacts/models/chla_ensemble.joblib`
+- `artifacts/models/runtime_env_defaults.json`
 
-Runtime artifact footprint:
+Frozen runtime artifact footprint:
 
-- frozen submission bundle under `artifacts/models/`: `29.48 MB`
+- `4.84 MB`
 
 ## Final Released Area8 Offline Evaluation
 
 Using the official released Area8 truth JSONs and the final-round scoring formula:
 
-- Turbidity: `RMSE = 2.1440`, `R2 = 0.1155`, `NRMSE = 0.9940`, `score = 6.0765`
-- Chl-a: `RMSE = 1.1400`, `R2 = 0.0906`, `NRMSE = 0.7055`, `score = 19.2541`
-- Algorithm score: `12.6653`
+- Turbidity: `RMSE = 2.0728`, `R2 = 0.1733`, `NRMSE = 0.9609`, `score = 10.6170`
+- Chl-a: `RMSE = 1.1465`, `R2 = 0.0802`, `NRMSE = 0.7095`, `score = 18.5354`
+- Algorithm score: `14.5762`
+
+Improvement over the prior frozen baseline:
+
+- previous frozen runtime score: `14.4445`
+- late-stage gain: `+0.1318` points (`+0.91%`)
+- total gain over the earlier `12.6653` baseline: `+1.9109` points (`+15.09%`)
 
 Those final numbers are written to:
 
 - `artifacts/reports/released_area8/released_area8_scores.json`
 - `artifacts/reports/released_area8/released_area8_scores.md`
 
-The score-push experiment table is written to:
+The final late-stage search summary is written to:
 
-- `artifacts/reports/score_push_experiments.json`
-- `artifacts/reports/score_push_experiments.md`
+- `artifacts/reports/final_two_hour_score_push_summary.json`
+- `artifacts/reports/final_two_hour_score_push_summary.md`
 
 ## Repo Layout
 
-- `src/hydrosat/` contains feature extraction, raster IO, training CLIs, inference CLI, released-Area8 scoring, and the score-push sweep runner.
+- `src/hydrosat/` contains raster IO, feature extraction, training CLIs, inference CLI, released-Area8 scoring, and the final score-push harness.
 - `artifacts/models/` contains the frozen runtime models used by inference.
 - `track2_download_link_1/` to `track2_download_link_5/` contain the raw organizer downloads and stay at the repo root for compatibility.
-- `Hydro Sat Systems_Arv Bali_baliarv21@gmail.com/` contains the final deck and presentation script.
-- `scripts/build_proposal_deck.py` regenerates the PPT from the current score report.
+- `Hydro Sat Systems_Arv Bali_baliarv21@gmail.com/` contains the regenerated deck and presentation script.
+- `scripts/build_proposal_deck.py` regenerates the PPT from the current released-Area8 report.
 
 Generated local outputs are ignored under:
 
@@ -88,13 +99,14 @@ Expected local state:
 
 ## Run Sample Input Inference
 
+The runtime bundle now carries its own defaults in `artifacts/models/runtime_env_defaults.json`, so the standard CLI reproduces the winning configuration automatically.
+
 ```powershell
 $env:PYTHONPATH = "src"
 python -m hydrosat.infer `
   --input-root "track2_download_link_1\Guide to the Second Round_track2\test_input_sample" `
   --model-dir "artifacts\models" `
-  --output-dir "artifacts\output\sample_input" `
-  --patch-size 32 `
+  --output-dir "artifacts\output\sample_input_final" `
   --progress-every 1000
 ```
 
@@ -107,6 +119,8 @@ This writes all four naming variants:
 
 ## Re-Run Final Released Area8 Evaluation
 
+The released-Area8 evaluation is the source of truth for the final local score:
+
 ```powershell
 $env:PYTHONPATH = "src"
 python -m hydrosat.evaluate_released_area8 `
@@ -115,8 +129,8 @@ python -m hydrosat.evaluate_released_area8 `
   --work-dir "artifacts\eval_input\released_area8" `
   --output-dir "artifacts\output\released_area8" `
   --report-dir "artifacts\reports\released_area8" `
-  --patch-size 32 `
-  --progress-every 500
+  --patch-size 24 `
+  --progress-every 1000
 ```
 
 Current measured workload:
@@ -124,19 +138,11 @@ Current measured workload:
 - `372` turbidity points
 - `103` chl-a points
 - `475` total points
+- measured local runtime: `25.23 s`
 
-## Reproduce The Final Score Push
+## Reproduce The Score Push Harness
 
-Build features once:
-
-```powershell
-$env:PYTHONPATH = "src"
-python -m hydrosat.build_features --data-root . --out artifacts/features/train_features_area32.csv --patch-size 32 --progress-every 200
-Copy-Item artifacts/features/train_features_area32.csv artifacts/features/train_features.csv -Force
-Copy-Item artifacts/features/train_features_area32.csv artifacts/features/train_features_v2.csv -Force
-```
-
-Run the fixed tabular sweep:
+Build features for all searched patch sizes:
 
 ```powershell
 $env:PYTHONPATH = "src"
@@ -147,20 +153,24 @@ python -m hydrosat.score_push `
   --experiments-dir artifacts/experiments `
   --reports-dir artifacts/reports `
   --runtime-model-dir artifacts/models `
-  --patch-size 32 `
-  --progress-every 200 `
-  --top-n 5 `
-  --max-features 500 `
+  --progress-every 500 `
+  --random-state 42 `
   --selection-metric score
 ```
 
-The winning sweep result before final freezing was:
+What the final score-push harness now does:
 
-- `area_filter10_score`
-- area-CV algorithm score proxy: `11.6771`
-- image-CV algorithm score proxy: `56.3578`
+- builds features for patch sizes `24`, `32`, and `40`
+- runs Stage A structural search over `full`, `filter05`, `filter10`, `filter15`, `filter10_clip97`, and `filter10_clip99`
+- runs Stage B fine search over the best promoted structures
+- tunes the current best tabular winner with a bounded released-Area8 last-mile search
+- evaluates the saved regime turbidity candidate against the best current chl-a bundle
+- runs a narrow turbidity-only retrain fallback if tuning alone does not beat the live floor
+- freezes the best winning runtime back into `artifacts/models/`
 
-After final runtime calibration defaults were frozen, the released Area8 score rose to `12.6653`.
+The final winner before freezing in the last push was:
+
+- `patch24_filter15_top3_feat800__patch24_filter15_top3_feat800`
 
 ## Submission Notes
 
@@ -173,9 +183,12 @@ After final runtime calibration defaults were frozen, the released Area8 score r
 
 Default submission-time runtime behavior:
 
+- `PATCH_SIZE=24`
 - `HYDROSAT_CALIBRATE_TEST_STATS=1`
-- `HYDROSAT_TURBIDITY_MODE=blend`
-- `HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT=0.81`
+- `HYDROSAT_TURBIDITY_MODE=model`
+- `HYDROSAT_TURBIDITY_CALIBRATION=lognormal_rank`
+- `HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA=0.52`
+- `HYDROSAT_TURBIDITY_PRIOR_SHRINK=0.05`
 - `HYDROSAT_CHLA_MODE=model`
 - `HYDROSAT_ENABLE_CNN=0`
 

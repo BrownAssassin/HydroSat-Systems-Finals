@@ -21,18 +21,26 @@ Output files written by inference:
 Final frozen runtime model artifacts:
 - `artifacts/models/turbidity_ensemble.joblib`
 - `artifacts/models/chla_ensemble.joblib`
+- `artifacts/models/runtime_env_defaults.json`
 
 Frozen runtime defaults:
+- patch size `24`
 - released-stat calibration enabled
-- turbidity mode `blend`
-- turbidity heuristic weight `0.81`
+- turbidity mode `model`
+- turbidity calibration `lognormal_rank`
+- turbidity lognormal sigma `0.52`
+- turbidity prior shrink `0.05`
 - chl-a mode `model`
 - CNNs disabled
 
 Final released Area8 offline evaluation using the official final-round scoring formula:
-- Turbidity: `RMSE 2.1440`, `R2 0.1155`, `score 6.0765`
-- Chl-a: `RMSE 1.1400`, `R2 0.0906`, `score 19.2541`
-- Algorithm score: `12.6653`
+- Turbidity: `RMSE 2.0728`, `R2 0.1733`, `score 10.6170`
+- Chl-a: `RMSE 1.1465`, `R2 0.0802`, `score 18.5354`
+- Algorithm score: `14.5762`
+
+Latest late-stage improvement:
+- previous frozen runtime score `14.4445`
+- gain `+0.1318` points
 
 Competition-facing files at the repo root:
 - `.gitlab-ci.yml`

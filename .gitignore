@@ -10,6 +10,7 @@ __pycache__/
 
 artifacts/eval_input/
 artifacts/experiments/
+artifacts/experiments_smoke/
 artifacts/output/
 artifacts/reports/
 artifacts/features/
