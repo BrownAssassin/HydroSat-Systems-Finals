@@ -11,8 +11,8 @@ from pptx.util import Inches, Pt
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-SCORE_PATH = REPO_ROOT / "artifacts" / "reports" / "released_area8" / "released_area8_scores.json"
-OUTPUT_PATH = REPO_ROOT / "Hydro Sat Systems_Arv Bali_baliarv21@gmail.com" / "hydrosat_best_technical_proposal.pptx"
+SCORE_PATH = REPO_ROOT / "docs" / "results" / "released_area8_scores.json"
+OUTPUT_PATH = REPO_ROOT / "docs" / "proposal" / "hydrosat_best_technical_proposal.pptx"
 MODELS_DIR = REPO_ROOT / "artifacts" / "models"
 
 SLIDE_W = Inches(13.333)
@@ -204,9 +204,12 @@ def build_cover(prs: Presentation, scores: dict) -> None:
             ("Mission case", 14, ACCENT_2, True),
             ("Final frozen runtime", 11, WHITE, True),
             ("Point-based 12-band patch inference with target-specific ensembles and released-stat-aware runtime calibration.", 10, MUTED, False),
-            ("Measured offline Area8 score", 11, WHITE, True),
+            ("Frozen runtime score", 11, WHITE, True),
             (f"{scores['algorithm_score']:.2f}", 28, WHITE, True),
-            ("using the official released truth files and final-round scoring formula", 9, MUTED, False),
+            ("leaderboard-comparable released-Area8 result", 9, MUTED, False),
+            ("Site-adaptive research", 11, WHITE, True),
+            ("53.95", 20, WHITE, True),
+            ("retrospective monitored-site study, not a leaderboard claim", 9, MUTED, False),
             ("Submission fit", 11, WHITE, True),
             ("Dockerized /input -> /output runtime, no external code downloads, container-ready for GitLab submission.", 10, MUTED, False),
         ],
@@ -235,7 +238,7 @@ def build_architecture(prs: Presentation) -> None:
 
     step_titles = [
         ("1. Input", "CSV request rows + area8 TIFF scenes"),
-        ("2. Patch", "32x32 crops centered on Lon/Lat"),
+        ("2. Patch", "24x24 crops centered on Lon/Lat"),
         ("3. Features", "1073 spectral, spatial, and seasonal descriptors"),
         ("4. Predict", "Target-specific ensemble regressors"),
         ("5. Calibrate", "Public-stat-aware clipping and ranking logic"),
@@ -297,7 +300,7 @@ def build_feasibility(prs: Presentation, scores: dict) -> None:
     add_top_bar(slide, "Part II | On-Orbit Implementation Feasibility")
     add_title(slide, "Resource-aware baseline with a CPU-first critical path", "Measured local runtime and artifact footprint used as practical feasibility evidence")
 
-    add_metric_card(slide, Inches(0.68), Inches(2.0), Inches(2.85), "Execution time", "20.43 s", "475 released Area8 points end to end", ACCENT)
+    add_metric_card(slide, Inches(0.68), Inches(2.0), Inches(2.85), "Execution time", "25.23 s", "475 released Area8 points end to end", ACCENT)
     add_metric_card(slide, Inches(3.62), Inches(2.0), Inches(2.85), "Model footprint", runtime_bundle_mb(), "frozen submission bundle", ACCENT_2)
     add_metric_card(slide, Inches(6.56), Inches(2.0), Inches(2.85), "Frozen runtime", "2 models", "turbidity + chl-a ensemble bundles", ACCENT_3)
     add_metric_card(slide, Inches(9.50), Inches(2.0), Inches(2.85), "Critical path", "CPU-first", "CNNs disabled by default", ACCENT)
@@ -348,7 +351,7 @@ def build_innovation(prs: Presentation) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     add_bg(slide)
     add_top_bar(slide, "Part III | Innovativeness of the Implementation Path")
-    add_title(slide, "Different from a ground-only workflow", "HydroSat keeps the runtime path compact while preserving target-specific water-quality intelligence")
+    add_title(slide, "Different from a ground-only workflow", "A compact frozen runtime plus a stronger site-adaptive monitoring layer")
 
     add_panel(slide, Inches(0.7), Inches(1.95), Inches(5.7), Inches(4.85), PANEL)
     add_text(
@@ -377,7 +380,8 @@ def build_innovation(prs: Presentation) -> None:
             ("Use point-centered spectral-spatial features instead of full-scene deep vision on the critical path.", 11, WHITE, False),
             ("Separate turbidity and chl-a inference so each target can follow a different feature importance pattern.", 11, WHITE, False),
             ("Keep optional CNNs as an augmentation path rather than a hard runtime dependency.", 11, WHITE, False),
-            ("Prepare for future quality gating, uncertainty flags, and selective downlink logic.", 11, WHITE, False),
+            ("Add same-site temporal calibration when local monitoring history exists.", 11, WHITE, False),
+            ("Prepare for quality gating, uncertainty flags, and selective downlink logic.", 11, WHITE, False),
         ],
     )
 
@@ -404,7 +408,7 @@ def build_value(prs: Presentation, scores: dict) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     add_bg(slide)
     add_top_bar(slide, "Part IV | Value, Evidence, and Application Scenarios")
-    add_title(slide, "Final frozen evidence plus real-world water-quality use cases", "Released Area8 offline score after the final score-push retraining pass")
+    add_title(slide, "Two honest evidence layers", "Frozen runtime for leaderboard comparison, site-adaptive research for monitored-basin value")
 
     add_metric_card(
         slide,
@@ -426,7 +430,7 @@ def build_value(prs: Presentation, scores: dict) -> None:
         f"score | RMSE {scores['chla']['rmse']:.4f} | R2 {scores['chla']['r2']:.4f}",
         ACCENT,
     )
-    add_metric_card(slide, Inches(0.7), Inches(4.94), Inches(2.6), "Final algorithm", f"{scores['algorithm_score']:.2f}", "released Area8 offline score", ACCENT_2)
+    add_metric_card(slide, Inches(0.7), Inches(4.94), Inches(2.6), "Frozen algorithm", f"{scores['algorithm_score']:.2f}", "leaderboard-comparable result", ACCENT_2)
 
     add_bullet_panel(
         slide,
@@ -434,12 +438,12 @@ def build_value(prs: Presentation, scores: dict) -> None:
         Inches(2.02),
         Inches(4.15),
         Inches(4.35),
-        "Value translation pathways",
+        "Site-adaptive layer",
         [
-            "Water utilities can prioritize field verification after unusual turbidity spikes.",
-            "Environmental agencies can track persistent bloom-like chl-a behavior.",
-            "Emergency teams can triage sediment and water-quality events faster than a ground-only loop.",
-            "Satellite-ground coordination can send compact products first and reserve heavy imagery for uncertain cases.",
+            "Historical local measurements refine repeat-station products.",
+            "Retrospective date-held-out research reached 53.95.",
+            "This is not a leaderboard replacement score.",
+            "It shows why the system becomes stronger after deployment.",
         ],
     )
     add_bullet_panel(
@@ -456,19 +460,19 @@ def build_value(prs: Presentation, scores: dict) -> None:
             "Mission operations where downlink is the real bottleneck",
         ],
     )
-    add_footer(slide, f"Evidence source: released_area8_scores.json | algorithm score {scores['algorithm_score']:.2f}")
+    add_footer(slide, f"Frozen score {scores['algorithm_score']:.2f} | site-adaptive research 53.95")
 
 
 def build_future(prs: Presentation) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     add_bg(slide)
     add_top_bar(slide, "Part V | Future Planning")
-    add_title(slide, "From a stronger frozen runtime to a fuller onboard decision system", "The next phase is about turbidity robustness, uncertainty, and mission-facing product logic")
+    add_title(slide, "From frozen runtime to adaptive monitoring", "The next phase is about local calibration, causal validation, and mission-facing product logic")
 
     phases = [
         ("Phase 1 | Final runtime", "lock the runnable package, keep the evaluation path reproducible, and preserve the container workflow", ACCENT),
-        ("Phase 2 | Generalization", "improve turbidity behavior on unseen regions, tune calibration, and reduce score collapse under distribution shift", ACCENT_2),
-        ("Phase 3 | Mission productization", "add quality gating, uncertainty, regime routing, and selective downlink policies", ACCENT_3),
+        ("Phase 2 | Site adaptation", "productionize local calibration with uncertainty-aware fallbacks and causal validation", ACCENT_2),
+        ("Phase 3 | Mission productization", "improve turbidity robustness, add regime routing, and tie downlink to confidence", ACCENT_3),
     ]
     for idx, (title, desc, color) in enumerate(phases):
         left = Inches(0.86 + idx * 4.12)
@@ -488,9 +492,9 @@ def build_future(prs: Presentation) -> None:
         Inches(1.15),
         "Planned technical upgrades",
         [
+            "causal forward-only adaptation",
             "stronger uncertainty estimates",
             "lighter default model bundle",
-            "more robust calibration under test-set shift",
             "downlink prioritization tied to confidence and mission value",
         ],
     )

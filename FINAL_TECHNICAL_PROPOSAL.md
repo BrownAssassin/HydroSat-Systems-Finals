@@ -2,170 +2,204 @@
 
 ## 1. Mission Fit
 
-HydroSat is built for the final-round Clean Water task: estimate turbidity and chlorophyll-a from multispectral satellite imagery in a way that can still make sense in a space-computing context. Instead of treating the challenge as only a leaderboard regression problem, we frame it as a compact onboard inference problem:
+HydroSat addresses the final-round Clean Water task as an onboard-friendly inference problem: estimate turbidity and chlorophyll-a from multispectral scenes while respecting the practical constraints of space-computing workflows. Our goal is not only to predict two water-quality indicators, but to build a system that can begin with a compact frozen runtime and become more useful over time as a monitored basin accumulates local calibration history.
+
+Core mission framing:
 
 ```text
-mounted point requests + mounted multispectral scenes
--> bounded local patch extraction
--> target-specific water-quality inference
--> compact JSON products for rapid decision support
+mounted point requests + multispectral scenes
+-> local patch extraction
+-> water-quality feature generation
+-> target-specific inference
+-> optional site-adaptive calibration
+-> compact products for downstream action
 ```
 
-That framing matters because the organizers explicitly asked teams to consider on-orbit compute constraints, deployment practicality, and efficient inference.
+## 2. Two-Layer System Design
 
-## 2. Final Implemented Baseline
+### Layer A: Frozen onboard runtime
 
-The final frozen repository runtime is a CPU-first inference pipeline with the following structure:
+The submission-critical path is a compact tabular ensemble pipeline:
 
 ```text
 point table + 12-band GeoTIFF
--> 32x32 point-centered patch extraction
--> spectral, ratio, spatial, and seasonal feature generation
+-> 24x24 point-centered patch extraction
+-> spectral, ratio, spatial, and seasonal features
 -> target-specific ensemble regressors
--> released-stat calibration
+-> target-aware runtime calibration
 -> Track 2 JSON output packaging
 ```
 
-What is implemented in the repository today:
+Implemented frozen-runtime components:
 
-- point-centered patch extraction from 12-band TIFF imagery
+- point-centered patch extraction from multispectral TIFF scenes
 - handcrafted water-quality-oriented feature generation
 - separate turbidity and chlorophyll-a model paths
-- final ensemble `.joblib` runtime bundle under `artifacts/models/`
-- containerized execution for `/input`, `/output`, and `/workspace`
-- released-Area8 local evaluator using the official final-round formula
-- score-push sweep tooling for reproducible retraining and comparison
+- frozen ensemble artifacts under `artifacts/models/`
+- self-describing runtime defaults under `artifacts/models/runtime_env_defaults.json`
+- containerized `/input` -> `/output` execution via `run.sh`
+- released-Area8 local evaluation using the official scoring formula
 
-The final frozen runtime path uses:
+Final frozen winner:
 
-- patch size: `32`
-- selected retrain experiment: `area_filter10_score`
-- area-grouped selection for the deployment candidate
-- turbidity runtime mode: `blend`
-- turbidity blend weight: `0.81`
-- released-stat calibration enabled for both targets
+- structure family: `patch24_filter15`
+- final paired bundle: `patch24_filter15_top3_feat800__patch24_filter15_top3_feat800`
+- patch size: `24`
+- turbidity mode: `model`
+- turbidity calibration: `lognormal_rank`
+- turbidity sigma: `0.52`
+- turbidity prior shrink: `0.05`
+- chl-a mode: `model`
+- released-stat calibration enabled
+- CNN disabled on the critical runtime path
 
-## 3. Measured Evidence
+### Layer B: Site-adaptive monitoring
 
-After the organizers released the full Area8 image bundle and truth JSONs, we ran a full offline evaluation using the official final-round scoring formula:
+The stronger proposed mission architecture adds a second layer when a basin has historical local measurements available:
+
+```text
+frozen spectral inference
++ historical same-site calibration
++ temporal continuity model
+-> refined monitored-site product
+```
+
+This layer treats repeat stations as time series rather than isolated points. It can use prior local measurements to adapt a generic spectral model to a monitored basin, which is operationally useful because environmental monitoring systems often become more valuable after deployment as local matchup history accumulates.
+
+## 3. Honest Performance Story
+
+### Frozen competition-runtime evidence
+
+After the organizers released the full Area8 imagery and truth JSON files, we evaluated the final runtime with the official formula:
 
 - `NRMSE = RMSE / mean_truth`
 - `parameter_score = (0.5 * max(0, R2) + 0.5 * max(0, 1 - NRMSE)) * 100`
 - `algorithm_score = 0.5 * turbidity_score + 0.5 * chla_score`
 
-Frozen submission-runtime results from `python -m hydrosat.evaluate_released_area8`:
+Frozen released-Area8 results:
 
-- Turbidity: `RMSE 2.1440`, `R2 0.1155`, `NRMSE 0.9940`, `score 6.0765`
-- Chl-a: `RMSE 1.1400`, `R2 0.0906`, `NRMSE 0.7055`, `score 19.2541`
-- Final algorithm score: `12.6653`
+- Turbidity: `RMSE 2.0728`, `R2 0.1733`, `NRMSE 0.9609`, `score 10.6170`
+- Chl-a: `RMSE 1.1465`, `R2 0.0802`, `NRMSE 0.7095`, `score 18.5354`
+- Final algorithm score: `14.5762`
 
-This is a substantial improvement over the earlier frozen local baseline of `6.0453`, but it is not the strongest final-round technical direction once the released Area8 calibration set is available.
+Improvement history:
 
-Released Area8 evaluation workload:
+- earlier frozen baseline: `12.6653`
+- prior late-stage frozen runtime: `14.4445`
+- final frozen runtime: `14.5762`
+- total gain over the `12.6653` baseline: `+1.9109` points (`+15.09%`)
+
+Evaluation workload and footprint:
 
 - `372` turbidity points
 - `103` chl-a points
-- `475` total points
+- `475` total evaluation points
+- runtime bundle size: `4.84 MB`
+- measured local released-Area8 runtime: `25.23 s`
 
-Frozen runtime footprint:
+Tracked frozen-runtime evidence:
 
-- frozen runtime model bundle: `29.48 MB`
+- `docs/results/released_area8_scores.json`
+- `docs/results/released_area8_scores.md`
+- `docs/results/final_score_push_summary.json`
+- `docs/results/final_score_push_summary.md`
 
-### Post-release site-calibrated research result
+### Site-adaptive research evidence
 
-The strongest defensible local result is not truth replay. It is a site-calibrated model evaluated on held-out dates, so every validation date is unseen while the model may use calibration history from other dates at the same Area8 stations.
+The stronger post-release research layer is documented separately because it answers a different operational question from the leaderboard. It asks:
 
-Local validation protocol:
+> Once HydroSat is monitoring a basin that already has local calibration history, how much can local temporal adaptation improve monitored-site products?
 
-- group split by acquisition date
-- three date-held-out folds
-- no held-out labels used during fitting
-- same official Track 2 score formula
-- released Area8 imagery used for feature extraction
+In a post-release retrospective date-held-out study using the released Area8 truth set:
 
-Best honest date-held-out result from `scripts/site_calibration_cv.py`:
-
-- Turbidity: `score 54.0113`
-- Chl-a: `score 53.8813`
+- Turbidity score: `54.0113`
+- Chl-a score: `53.8813`
 - Algorithm score: `53.9463`
 
-Best system shape:
+Best research configuration:
 
 ```text
 spectral-spatial ExtraTrees model
 + same-site temporal calibration prior
-+ per-target blending strategy
++ per-target blend strategy
 ```
 
-For turbidity, the best local blend uses a learned spectral model plus per-site linear interpolation across surrounding observations. For chlorophyll-a, the best local blend uses a learned spectral model plus nearest-date same-site seasonal priors. This is much stronger than the frozen generic runtime and still avoids the invalid `100`-score shortcut of copying released truths into outputs.
+For turbidity, the strongest retrospective blend combines spectral inference with same-site interpolation across surrounding observations. For chlorophyll-a, the strongest blend combines spectral inference with nearby-date seasonal priors. This is **not** the frozen leaderboard-equivalent result and should not be presented as such. It is evidence that HydroSat becomes far more useful as a site-adaptive monitoring system once local history exists.
+
+Tracked site-adaptive evidence:
+
+- `scripts/site_calibration_cv.py`
+- `docs/results/site_adaptive_research.md`
+- `docs/results/site_adaptive_research.json`
 
 ## 4. Why This Is Feasible For On-Orbit Computing
 
-The final critical path is intentionally CPU-first:
+The final critical path is intentionally CPU-first and compact:
 
 - it does not require CNN inference to succeed
-- it ships compact pretrained ensemble artifacts instead of a large end-to-end vision stack
-- it processes point requests and local patches, not full-scene tensors on the main path
-- it produces compact JSON products instead of large derived raster payloads
+- it ships small pretrained ensemble artifacts rather than a large end-to-end deep vision stack
+- it processes point requests and bounded local patches instead of full-scene tensors
+- it produces compact JSON outputs that are practical for selective downlink workflows
 
-From a mission perspective, this supports a reasonable onboard interpretation:
+This supports a realistic onboard interpretation:
 
 - ingest requested coordinates
 - read only the needed local pixels
-- infer water-quality indicators
-- downlink compact products for faster triage
+- infer the most decision-relevant water-quality indicators
+- transmit compact products for faster triage on the ground
 
-This is not yet a flight-qualified system, but it is a much more portable and auditable baseline than a GPU-only submission path.
+The site-adaptive layer is complementary rather than contradictory. The spacecraft can still run the lightweight frozen estimator, while ground-side calibration updates or future onboard parameter updates can refine monitored-site products as history accumulates.
 
 ## 5. Innovation And Differentiation
 
-The strongest innovation in HydroSat is not a single large deep model. It is the way the inference path is structured for bounded execution and water-quality specificity.
+HydroSat’s innovation is the combination of a deployable baseline and an adaptive monitoring roadmap:
 
-Current differentiators:
-
-- handcrafted spectral indices tailored to water-quality behavior rather than generic image embeddings alone
+- handcrafted spectral indices tailored to water-quality behavior
 - separate turbidity and chlorophyll-a modeling paths
-- explicit score-push retraining workflow focused on unseen-area behavior
-- optional CNN path kept outside the default runtime dependency chain
-- deterministic containerized input and output contract aligned to the competition platform
-- optional site-calibration layer that adapts generic spectral inference to a monitored basin without leaking held-out dates
-- temporal continuity modeling for repeat monitoring stations, which is directly relevant to operational water-quality surveillance
-
-This makes HydroSat different from a purely ground-first workflow where whole scenes are downlinked first and interpreted later.
+- unseen-area-first model selection followed by bounded target-specific tuning
+- self-describing runtime defaults so the winning configuration can be reproduced without hidden shell settings
+- optional site-adaptive calibration for basins with local monitoring history
+- temporal continuity modeling for repeat monitoring stations
+- optional CNN and regime-routing utilities kept outside the default submission-critical dependency chain
+- deterministic containerized input/output behavior aligned to the competition platform
 
 ## 6. Application Value
 
-HydroSat can support several practical water-quality scenarios:
+HydroSat supports two useful operating modes:
 
-- rapid triage of turbidity spikes after storms or sediment events
-- chlorophyll-a driven bloom surveillance
-- faster prioritization of field verification in data-sparse regions
-- compact product downlink when bandwidth is the bottleneck
-- satellite-ground workflows where only the most decision-relevant outputs should be transmitted first
+1. **Cold-start monitoring**
+   - deploy the frozen runtime immediately over a new region
+   - downlink compact preliminary water-quality products
+   - flag lower-confidence cases for review or follow-up
 
-The social value is strongest in settings where in situ sampling is sparse and water-quality changes need early warning rather than perfect retrospective mapping.
+2. **Mature monitored-basin operations**
+   - combine current imagery with historical local calibration data
+   - stabilize repeated station products over time
+   - improve triage for turbidity spikes, bloom surveillance, and field-verification planning
 
 ## 7. Honest Final Positioning
 
-Our final positioning is intentionally honest:
+Our final positioning is intentionally explicit:
 
 - the repository contains a real, reproducible, container-ready frozen runtime
-- the frozen submission score is only `12.6653` on full released Area8 and should not be oversold
-- the stronger final-round concept is the post-release site-calibrated system, which reaches `53.9463` under date-held-out validation without using held-out truths
-- the invalid truth-replay path can score `100`, but it is leakage and is not part of the proposal
-- turbidity remains the limiting target under geographic shift, so further gains should focus there first
+- the frozen leaderboard-comparable released-Area8 result is `14.5762`
+- the stronger proposed architecture is a site-adaptive monitoring system, not a claim that the frozen leaderboard model scored `53+`
+- the post-release site-adaptive study reached `53.9463` under retrospective date-held-out evaluation
+- that research result demonstrates the value of local calibration history, while future causal-only forecasting remains a separate validation target
+- direct truth replay is leakage and is not part of the proposal
 
 ## 8. Future Roadmap
 
-The roadmap now starts from a stronger frozen baseline rather than from a partial prototype.
-
 Priority next steps:
 
-1. productionize the site-calibration layer with uncertainty-aware fallbacks
-2. improve turbidity robustness on unseen regions and optical regimes
-3. add explicit uncertainty or quality flags
-4. introduce regime-aware routing or confidence-gated inference
-5. further compress the deployment bundle
-6. add mission-facing selective downlink logic
+1. productionize the site-adaptive layer with uncertainty-aware fallbacks
+2. test causal forward-only adaptation for near-real-time operations
+3. improve turbidity robustness under unseen optical and geographic regimes
+4. extend regime-aware routing and confidence-aware product logic
+5. compress the deployment bundle further
+6. add mission-facing selective downlink behavior
 
-So the current repository should be understood as a compact operational baseline today and a platform for a more capable onboard water-intelligence system next.
+Final presentation assets:
+
+- `docs/proposal/hydrosat_best_technical_proposal.pptx`
+- `docs/proposal/presentation_script.md`

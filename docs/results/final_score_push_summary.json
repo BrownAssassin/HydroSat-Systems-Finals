@@ -1,0 +1,2188 @@
+{
+  "fallback_score": 14.4445,
+  "final_score": 14.576240914143778,
+  "winner_type": "tabular_pair",
+  "runtime_model_dir": "D:\\Repositories\\HydroSat-Systems-Finals\\artifacts\\models",
+  "final_summary": {
+    "name": "tabular_winner",
+    "pair_model_dir": "D:\\Repositories\\HydroSat-Systems-Finals\\artifacts\\experiments\\pairings\\patch24_filter15_top3_feat800__patch24_filter15_top3_feat800\\models",
+    "turbidity_model_dir": "D:\\Repositories\\HydroSat-Systems-Finals\\artifacts\\experiments\\pairings\\patch24_filter15_top3_feat800__patch24_filter15_top3_feat800\\models",
+    "chla_model_dir": "D:\\Repositories\\HydroSat-Systems-Finals\\artifacts\\experiments\\pairings\\patch24_filter15_top3_feat800__patch24_filter15_top3_feat800\\models",
+    "turbidity_experiment": "patch24_filter15_top3_feat800",
+    "chla_experiment": "patch24_filter15_top3_feat800",
+    "patch_size": 24,
+    "area_cv": {
+      "algorithm_score": 14.621636378248018,
+      "turbidity_score": 21.13712348158755,
+      "chla_score": 8.106149274908486
+    },
+    "source_area_cv_turbidity_score": 21.13712348158755,
+    "source_area_cv_chla_score": 8.106149274908486,
+    "turbidity_tuning": {
+      "best": {
+        "kind": "model_lognormal_rank",
+        "env": {
+          "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+          "HYDROSAT_TURBIDITY_MODE": "model",
+          "HYDROSAT_CHLA_MODE": "model",
+          "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+          "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.52",
+          "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.05"
+        },
+        "metrics": {
+          "count": 372,
+          "rmse": 2.0727643942521694,
+          "r2": 0.17328128603892357,
+          "mean_truth": 2.157016129032258,
+          "nrmse": 0.9609406097404158,
+          "score": 10.617033814925387
+        }
+      },
+      "trials": [
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.52",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.05"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.0727643942521694,
+            "r2": 0.17328128603892357,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9609406097404158,
+            "score": 10.617033814925387
+          }
+        },
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.52",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.02"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.073145315655565,
+            "r2": 0.17297739835127213,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9611172061961719,
+            "score": 10.593009607755011
+          }
+        },
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.54",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.05"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.073152523805979,
+            "r2": 0.17297164736640191,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9611205479191738,
+            "score": 10.592554972361407
+          }
+        },
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.50",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.02"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.0733499996351026,
+            "r2": 0.17281408453770353,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9612120983839412,
+            "score": 10.580099307688117
+          }
+        },
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.50",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.00"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.073350051988063,
+            "r2": 0.17281404276411783,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9612121226549515,
+            "score": 10.580096005458318
+          }
+        },
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.52",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.00"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.073645657700725,
+            "r2": 0.17257815560621725,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9613491664668559,
+            "score": 10.56144945696807
+          }
+        },
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.50",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.05"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.0736817394664615,
+            "r2": 0.17254936081113437,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9613658940959406,
+            "score": 10.559173335759686
+          }
+        },
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.54",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.02"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.074356792052698,
+            "r2": 0.17201054754933243,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9616788507665703,
+            "score": 10.516584839138105
+          }
+        },
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.48",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.00"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.0743869868579843,
+            "r2": 0.17198644257148876,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9616928491808057,
+            "score": 10.514679669534155
+          }
+        },
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.48",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.02"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.0748177510815053,
+            "r2": 0.17164251865268743,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9618925529371769,
+            "score": 10.487498285775526
+          }
+        },
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.56",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.05"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.0750048716374723,
+            "r2": 0.171493098587292,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9619793026621549,
+            "score": 10.475689796256853
+          }
+        },
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.54",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.00"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.0754330447526246,
+            "r2": 0.17115114181779223,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9621778051718902,
+            "score": 10.4486668322951
+          }
+        },
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.48",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.05"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.075760672580522,
+            "r2": 0.1708894370275561,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9623296945451257,
+            "score": 10.427987124121518
+          }
+        },
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.56",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.02"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.0771528668745054,
+            "r2": 0.16977690985253713,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9629751205460003,
+            "score": 10.340089465326841
+          }
+        },
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.58",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.05"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.0784958548062824,
+            "r2": 0.168702997522984,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9635977343103116,
+            "score": 10.255263160633621
+          }
+        },
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.56",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.00"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.078887092153043,
+            "r2": 0.16839001634241757,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9637791132724318,
+            "score": 10.230545153499287
+          }
+        },
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.44",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.00"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.0798949130561644,
+            "r2": 0.1675835107058148,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9642463424644424,
+            "score": 10.166858412068619
+          }
+        },
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.44",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.02"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.0810018046429035,
+            "r2": 0.16669727363707998,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9647595011617006,
+            "score": 10.096888623768969
+          }
+        },
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.58",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.02"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.0817180738432346,
+            "r2": 0.16612353862578377,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9650915659945456,
+            "score": 10.051598631561909
+          }
+        },
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.44",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.05"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.082896773266622,
+            "r2": 0.16517896502586837,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9656380150486453,
+            "score": 9.977047498861152
+          }
+        },
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.60",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.05"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.0838162950631043,
+            "r2": 0.16444171718032963,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9660643084750625,
+            "score": 9.918870435263354
+          }
+        },
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.58",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.00"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.0841990163665747,
+            "r2": 0.16413476562955098,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9662417393706034,
+            "score": 9.894651312947378
+          }
+        },
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.60",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.02"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.0882536849481426,
+            "r2": 0.16087936327569108,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9681214974896987,
+            "score": 9.63789328929962
+          }
+        },
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.40",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.00"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.0891770112934682,
+            "r2": 0.16013716084858576,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9685495547178752,
+            "score": 9.579380306535528
+          }
+        },
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.40",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.02"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.090747246466611,
+            "r2": 0.1588741967580075,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9692775210747366,
+            "score": 9.479833784163544
+          }
+        },
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.62",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.05"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.091174031043391,
+            "r2": 0.15853076341393746,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9694753798533687,
+            "score": 9.452769178028436
+          }
+        },
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.60",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.00"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.0915769477100503,
+            "r2": 0.15820647223845308,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9696621733878427,
+            "score": 9.42721494253052
+          }
+        },
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.40",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.05"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.0932850132012875,
+            "r2": 0.15683102623793277,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9704540383480752,
+            "score": 9.31884939449288
+          }
+        },
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.62",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.02"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.096978210807747,
+            "r2": 0.15385318362874012,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9721662172959982,
+            "score": 9.084348316637097
+          }
+        },
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.62",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.00"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.1012463493727918,
+            "r2": 0.15040522485539243,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9741449408241156,
+            "score": 8.81301420156384
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.74",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.05",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "0.90",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.1080255105634103,
+            "r2": 0.1449143591054044,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9772877829658014,
+            "score": 8.381328806980148
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.76",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.00",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "0.90",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.1092588344589926,
+            "r2": 0.1439135115820288,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9778595561106483,
+            "score": 8.302697773569022
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.76",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.02",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "0.90",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.109341216807261,
+            "r2": 0.14384663710330037,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.977897748846975,
+            "score": 8.297444412816269
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.76",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.05",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "0.90",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.1097301337371577,
+            "r2": 0.14353089564693033,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9780780520559599,
+            "score": 8.272642179548523
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.74",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.02",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "0.90",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.1102770212542152,
+            "r2": 0.14308680759689107,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9783315909654269,
+            "score": 8.23776083157321
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.74",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.00",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "0.90",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.112044924479242,
+            "r2": 0.1416504329805055,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9791511969021799,
+            "score": 8.12496180391628
+          }
+        },
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.66",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.05"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.11292038952887,
+            "r2": 0.14093869547849913,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9795570654711927,
+            "score": 8.069081500365321
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.78",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.00",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "0.90",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.1159875601931875,
+            "r2": 0.1384428133987491,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9809790162035191,
+            "score": 7.8731898597614975
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.78",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.02",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "0.90",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.11643615816172,
+            "r2": 0.13807746742037152,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9811869877446192,
+            "score": 7.8445239837876155
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.78",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.05",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "0.90",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.117334960144233,
+            "r2": 0.13734523443876046,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9816036753949412,
+            "score": 7.7870779521909625
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.78",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.05",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "0.95",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.119430448865974,
+            "r2": 0.1356368813609128,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9825751510800494,
+            "score": 7.653086514043167
+          }
+        },
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.66",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.02"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.121955971639904,
+            "r2": 0.13357569614025144,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9837459920116204,
+            "score": 7.491485206431553
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.80",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.02",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "0.90",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.122160252484943,
+            "r2": 0.13340886665752183,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9838406973048678,
+            "score": 7.478408467632702
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.78",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.02",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "0.95",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.1221872740460106,
+            "r2": 0.13338679782998164,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9838532245923107,
+            "score": 7.476678661883546
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.80",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.05",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "0.90",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.1222424162872184,
+            "r2": 0.13334176163958156,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9838787887225301,
+            "score": 7.473148645852573
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.80",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.00",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "0.90",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.1222782792023227,
+            "r2": 0.1333124707789337,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9838954148917188,
+            "score": 7.470852794360744
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.76",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.05",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "0.95",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.1229820163866706,
+            "r2": 0.13273759671948693,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9842216698394107,
+            "score": 7.42579634400381
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.78",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.00",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "0.95",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.124295243368066,
+            "r2": 0.13166432842854847,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9848304863260935,
+            "score": 7.341692105122749
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.76",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.02",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "0.95",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.1277027662356147,
+            "r2": 0.12887634800043435,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9864102254952565,
+            "score": 7.123306125258893
+          }
+        },
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.66",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.00"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.1284492225956773,
+            "r2": 0.12826501274767244,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9867562851978315,
+            "score": 7.075436377492045
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.82",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.05",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "0.95",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.129069467655028,
+            "r2": 0.12775687932029356,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9870438329129378,
+            "score": 7.035652320367785
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.82",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.02",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "0.95",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.1302753541011192,
+            "r2": 0.1267685376569463,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9876028859630569,
+            "score": 6.958282584694469
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.76",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.00",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "0.95",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.131178346138827,
+            "r2": 0.12602808109838237,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9880215161371915,
+            "score": 6.900328248059545
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.82",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.00",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "0.95",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.131287430982005,
+            "r2": 0.12593860991000105,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9880720882408071,
+            "score": 6.8933260834597
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.82",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.00",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "0.90",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.131585332289219,
+            "r2": 0.12569424847424782,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9882101962981389,
+            "score": 6.874202608805446
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.82",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.02",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "0.90",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.1322568488413713,
+            "r2": 0.12514329397658264,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9885215136513631,
+            "score": 6.831089016260977
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.82",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.05",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "0.90",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.1334470323472554,
+            "r2": 0.12416636605923825,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.989073286765094,
+            "score": 6.754653964707213
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.84",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.05",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "0.95",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.1366531013872607,
+            "r2": 0.12153204430256548,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.990559631255918,
+            "score": 6.548620652332376
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.84",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.02",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "0.95",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.137455807023171,
+            "r2": 0.12087186822116847,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9909317683137295,
+            "score": 6.497004995371947
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.84",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.00",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "0.95",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.138176944112729,
+            "r2": 0.12027856580502494,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9912660899165455,
+            "score": 6.45062379442397
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.80",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.05",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "0.95",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.1386547617218072,
+            "r2": 0.11988533982732907,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9914876077821966,
+            "score": 6.419886602256625
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.84",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.00",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "0.90",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.140056949692876,
+            "r2": 0.11873088444725555,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9921376668856943,
+            "score": 6.329660878078064
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.84",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.02",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "0.90",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.1407544594370367,
+            "r2": 0.11815632593456726,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9924610347709746,
+            "score": 6.284764558179634
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.84",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.05",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "0.90",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.141967751730533,
+            "r2": 0.11715645663465457,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9930235211970918,
+            "score": 6.206646771878138
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.80",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.02",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "0.95",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.143607888042559,
+            "r2": 0.11580392635178449,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9937838939592378,
+            "score": 6.101001619627333
+          }
+        },
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.70",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.05"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.1457504110275902,
+            "r2": 0.11403554590547893,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.994777174888478,
+            "score": 5.962918550850044
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.80",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.00",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "0.95",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.1472277042059393,
+            "r2": 0.11281519913545446,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 0.9954620530210361,
+            "score": 5.867657305720919
+          }
+        },
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.70",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.02"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.158751018789855,
+            "r2": 0.10326731397491862,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 1.0008043007811793,
+            "score": 5.163365698745931
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.84",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.05",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "1.00",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.164234141272503,
+            "r2": 0.09870621411118807,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 1.0033462949780925,
+            "score": 4.935310705559404
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.82",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.05",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "1.00",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.167813999881044,
+            "r2": 0.09572208893152723,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 1.0050059295818203,
+            "score": 4.786104446576362
+          }
+        },
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.70",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.00"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.1679608774239996,
+            "r2": 0.09559954832869211,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 1.0050740225093504,
+            "score": 4.779977416434606
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.84",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.02",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "1.00",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.1705809244223775,
+            "r2": 0.09341223622049188,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 1.0062886851922639,
+            "score": 4.670611811024594
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.84",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.00",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "1.00",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.1751438412290156,
+            "r2": 0.08959663783219518,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 1.0084040689138893,
+            "score": 4.479831891609759
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.82",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.02",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "1.00",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.1758802527281436,
+            "r2": 0.08898008550873127,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 1.008745471784835,
+            "score": 4.449004275436563
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.82",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.00",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "1.00",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.181637036705193,
+            "r2": 0.0841530894867859,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 1.0114143363795713,
+            "score": 4.207654474339295
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.74",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.05",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "0.95",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.1953091104260167,
+            "r2": 0.07263810164542173,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 1.0177527561701354,
+            "score": 3.6319050822710865
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.78",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.05",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "1.00",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.2050650371855993,
+            "r2": 0.06437741734730429,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 1.022275636935037,
+            "score": 3.218870867365214
+          }
+        },
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.75",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.05"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.2058955763516073,
+            "r2": 0.06367247891821337,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 1.0226606777118905,
+            "score": 3.1836239459106688
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.74",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.02",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "0.95",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.2097001924070385,
+            "r2": 0.06043983377201145,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 1.0244245106309973,
+            "score": 3.021991688600573
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.78",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.02",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "1.00",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.2192441093922013,
+            "r2": 0.05230619724659913,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 1.0288491029447526,
+            "score": 2.6153098623299567
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.74",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.00",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "0.95",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.2198197043055514,
+            "r2": 0.051814535720709376,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 1.029115950700596,
+            "score": 2.590726786035469
+          }
+        },
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.75",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.02"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.2250007714659565,
+            "r2": 0.04738323385497556,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 1.031517911024708,
+            "score": 2.369161692748778
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.78",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.00",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "1.00",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.229206195038953,
+            "r2": 0.043778791978711706,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 1.0334675596696086,
+            "score": 2.188939598935585
+          }
+        },
+        {
+          "kind": "model_lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.75",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.00"
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.238369860227876,
+            "r2": 0.0359010988927132,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 1.0377158659597587,
+            "score": 1.79505494463566
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.76",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.05",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "1.00",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.277666393057297,
+            "r2": 0.0017527631613092343,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 1.0559338719822966,
+            "score": 0.08763815806546171
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.80",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.05",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "1.00",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.291637110396917,
+            "r2": -0.010530863287179004,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 1.0624107439683619,
+            "score": 0.0
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.76",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.02",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "1.00",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.2993790036567887,
+            "r2": -0.01737019842636789,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 1.0659999119656105,
+            "score": 0.0
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.80",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.02",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "1.00",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.31292300390565,
+            "r2": -0.029390699698451206,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 1.0722789564597923,
+            "score": 0.0
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.76",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.00",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "1.00",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.314473570013229,
+            "r2": -0.030771353829395,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 1.0729978041710861,
+            "score": 0.0
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.80",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.00",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "1.00",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.3277092233113246,
+            "r2": -0.04259429446790497,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 1.079133897972125,
+            "score": 0.0
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.74",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.05",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "1.00",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.862925432668661,
+            "r2": -0.5771680196458457,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 1.3272619495678544,
+            "score": 0.0
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.74",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.02",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "1.00",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.924060687727853,
+            "r2": -0.6452452781541926,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 1.355604461353624,
+            "score": 0.0
+          }
+        },
+        {
+          "kind": "blend_standard",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "blend",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_TURBIDITY_HEURISTIC_WEIGHT": "0.74",
+            "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.00",
+            "HYDROSAT_TURBIDITY_RANK_POWER": "1.00",
+            "HYDROSAT_TURBIDITY_CALIBRATION": ""
+          },
+          "metrics": {
+            "count": 372,
+            "rmse": 2.965603312887091,
+            "r2": -0.6923259168101124,
+            "mean_truth": 2.157016129032258,
+            "nrmse": 1.3748637634052392,
+            "score": 0.0
+          }
+        }
+      ]
+    },
+    "chla_tuning": {
+      "best": {
+        "kind": "model",
+        "env": {
+          "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+          "HYDROSAT_TURBIDITY_MODE": "model",
+          "HYDROSAT_CHLA_MODE": "model",
+          "HYDROSAT_CHLA_PRIOR_SHRINK": "0.00"
+        },
+        "metrics": {
+          "count": 103,
+          "rmse": 1.1465177773858453,
+          "r2": 0.08022188426833732,
+          "mean_truth": 1.615922330097087,
+          "nrmse": 0.709512924001094,
+          "score": 18.535448013362167
+        }
+      },
+      "trials": [
+        {
+          "kind": "model",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_CHLA_PRIOR_SHRINK": "0.00"
+          },
+          "metrics": {
+            "count": 103,
+            "rmse": 1.1465177773858453,
+            "r2": 0.08022188426833732,
+            "mean_truth": 1.615922330097087,
+            "nrmse": 0.709512924001094,
+            "score": 18.535448013362167
+          }
+        },
+        {
+          "kind": "model",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_CHLA_PRIOR_SHRINK": "0.02"
+          },
+          "metrics": {
+            "count": 103,
+            "rmse": 1.1471699192091755,
+            "r2": 0.07917524307289292,
+            "mean_truth": 1.615922330097087,
+            "nrmse": 0.7099164965065194,
+            "score": 18.462937328318674
+          }
+        },
+        {
+          "kind": "model",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_CHLA_PRIOR_SHRINK": "0.05"
+          },
+          "metrics": {
+            "count": 103,
+            "rmse": 1.148174005293646,
+            "r2": 0.07756259277231059,
+            "mean_truth": 1.615922330097087,
+            "nrmse": 0.710537866770281,
+            "score": 18.35123630010148
+          }
+        },
+        {
+          "kind": "model",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_CHLA_PRIOR_SHRINK": "0.08"
+          },
+          "metrics": {
+            "count": 103,
+            "rmse": 1.1492090668717452,
+            "r2": 0.07589871626282885,
+            "mean_truth": 1.615922330097087,
+            "nrmse": 0.7111784059588426,
+            "score": 18.236015515199313
+          }
+        },
+        {
+          "kind": "model",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_CHLA_PRIOR_SHRINK": "0.10"
+          },
+          "metrics": {
+            "count": 103,
+            "rmse": 1.1499162753282721,
+            "r2": 0.07476100625156401,
+            "mean_truth": 1.615922330097087,
+            "nrmse": 0.7116160559890173,
+            "score": 18.157247513127334
+          }
+        },
+        {
+          "kind": "lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_CHLA_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_CHLA_LOGNORMAL_SIGMA": "0.35",
+            "HYDROSAT_CHLA_PRIOR_SHRINK": "0.00"
+          },
+          "metrics": {
+            "count": 103,
+            "rmse": 1.1806891185749797,
+            "r2": 0.024577863263014033,
+            "mean_truth": 1.615922330097087,
+            "nrmse": 0.7306595722976624,
+            "score": 14.69591454826758
+          }
+        },
+        {
+          "kind": "lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_CHLA_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_CHLA_LOGNORMAL_SIGMA": "0.45",
+            "HYDROSAT_CHLA_PRIOR_SHRINK": "0.00"
+          },
+          "metrics": {
+            "count": 103,
+            "rmse": 1.2427622418878503,
+            "r2": -0.08068117361613081,
+            "mean_truth": 1.615922330097087,
+            "nrmse": 0.7690730047731832,
+            "score": 11.54634976134084
+          }
+        },
+        {
+          "kind": "lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_CHLA_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_CHLA_LOGNORMAL_SIGMA": "0.55",
+            "HYDROSAT_CHLA_PRIOR_SHRINK": "0.00"
+          },
+          "metrics": {
+            "count": 103,
+            "rmse": 1.334303565403695,
+            "r2": -0.245749664930754,
+            "mean_truth": 1.615922330097087,
+            "nrmse": 0.8257225861366295,
+            "score": 8.713870693168523
+          }
+        },
+        {
+          "kind": "blend",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "blend",
+            "HYDROSAT_CHLA_HEURISTIC_WEIGHT": "0.30",
+            "HYDROSAT_CHLA_PRIOR_SHRINK": "0.00"
+          },
+          "metrics": {
+            "count": 103,
+            "rmse": 1.350260947765965,
+            "r2": -0.2757245124494805,
+            "mean_truth": 1.615922330097087,
+            "nrmse": 0.8355976785622111,
+            "score": 8.220116071889445
+          }
+        },
+        {
+          "kind": "blend",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "blend",
+            "HYDROSAT_CHLA_HEURISTIC_WEIGHT": "0.25",
+            "HYDROSAT_CHLA_PRIOR_SHRINK": "0.00"
+          },
+          "metrics": {
+            "count": 103,
+            "rmse": 1.4300862887947647,
+            "r2": -0.43102088332281485,
+            "mean_truth": 1.615922330097087,
+            "nrmse": 0.8849969222894785,
+            "score": 5.7501538855260765
+          }
+        },
+        {
+          "kind": "lognormal_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model",
+            "HYDROSAT_CHLA_CALIBRATION": "lognormal_rank",
+            "HYDROSAT_CHLA_LOGNORMAL_SIGMA": "0.65",
+            "HYDROSAT_CHLA_PRIOR_SHRINK": "0.00"
+          },
+          "metrics": {
+            "count": 103,
+            "rmse": 1.4325970798363352,
+            "r2": -0.43605015818277226,
+            "mean_truth": 1.615922330097087,
+            "nrmse": 0.8865507042966988,
+            "score": 5.67246478516506
+          }
+        },
+        {
+          "kind": "blend",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "blend",
+            "HYDROSAT_CHLA_HEURISTIC_WEIGHT": "0.20",
+            "HYDROSAT_CHLA_PRIOR_SHRINK": "0.00"
+          },
+          "metrics": {
+            "count": 103,
+            "rmse": 1.6927442145106641,
+            "r2": -1.0049528426342764,
+            "mean_truth": 1.615922330097087,
+            "nrmse": 1.0475405797560589,
+            "score": 0.0
+          }
+        },
+        {
+          "kind": "blend",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "blend",
+            "HYDROSAT_CHLA_HEURISTIC_WEIGHT": "0.15",
+            "HYDROSAT_CHLA_PRIOR_SHRINK": "0.00"
+          },
+          "metrics": {
+            "count": 103,
+            "rmse": 2.2693413307685164,
+            "r2": -2.60347183347002,
+            "mean_truth": 1.615922330097087,
+            "nrmse": 1.404362875926203,
+            "score": 0.0
+          }
+        },
+        {
+          "kind": "blend",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "blend",
+            "HYDROSAT_CHLA_HEURISTIC_WEIGHT": "0.10",
+            "HYDROSAT_CHLA_PRIOR_SHRINK": "0.00"
+          },
+          "metrics": {
+            "count": 103,
+            "rmse": 2.620304447943902,
+            "r2": -3.8042433109398415,
+            "mean_truth": 1.615922330097087,
+            "nrmse": 1.621553461537022,
+            "score": 0.0
+          }
+        },
+        {
+          "kind": "model_rank",
+          "env": {
+            "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+            "HYDROSAT_TURBIDITY_MODE": "model",
+            "HYDROSAT_CHLA_MODE": "model_rank",
+            "HYDROSAT_CHLA_PRIOR_SHRINK": "0.00"
+          },
+          "metrics": {
+            "count": 103,
+            "rmse": 2.653530346721302,
+            "r2": -3.9268529869600304,
+            "mean_truth": 1.615922330097087,
+            "nrmse": 1.6421150307155379,
+            "score": 0.0
+          }
+        }
+      ]
+    },
+    "turbidity": {
+      "count": 372,
+      "rmse": 2.0727643942521694,
+      "r2": 0.17328128603892357,
+      "mean_truth": 2.157016129032258,
+      "nrmse": 0.9609406097404158,
+      "score": 10.617033814925387
+    },
+    "chla": {
+      "count": 103,
+      "rmse": 1.1465177773858453,
+      "r2": 0.08022188426833732,
+      "mean_truth": 1.615922330097087,
+      "nrmse": 0.709512924001094,
+      "score": 18.535448013362167
+    },
+    "algorithm_score": 14.576240914143778,
+    "turbidity_env": {
+      "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+      "HYDROSAT_TURBIDITY_MODE": "model",
+      "HYDROSAT_CHLA_MODE": "model",
+      "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+      "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.52",
+      "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.05"
+    },
+    "chla_env": {
+      "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+      "HYDROSAT_TURBIDITY_MODE": "model",
+      "HYDROSAT_CHLA_MODE": "model",
+      "HYDROSAT_CHLA_PRIOR_SHRINK": "0.00"
+    }
+  },
+  "stage_a_best": "patch24_filter15",
+  "stage_b_best": "patch24_filter15_top3_feat800"
+}

@@ -94,6 +94,36 @@ def load_model(model_dir: Path, target: str):
     return joblib.load(path)
 
 
+def load_runtime_defaults(model_dir: Path) -> dict[str, object]:
+    path = model_dir / "runtime_env_defaults.json"
+    if not path.exists():
+        return {}
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+    defaults: dict[str, object] = {}
+    env = payload.get("env")
+    if isinstance(env, dict):
+        defaults["env"] = {str(key): str(value) for key, value in env.items()}
+
+    patch_size = payload.get("patch_size")
+    try:
+        if patch_size is not None:
+            defaults["patch_size"] = int(patch_size)
+    except (TypeError, ValueError):
+        pass
+    return defaults
+
+
+def apply_runtime_defaults(model_dir: Path) -> dict[str, object]:
+    defaults = load_runtime_defaults(model_dir)
+    for key, value in defaults.get("env", {}).items():
+        os.environ.setdefault(str(key), str(value))
+    return defaults
+
+
 def predict_model(model_bundle, feat_df: pd.DataFrame):
     if model_bundle.get("kind") == "regime_ensemble":
         classifier = model_bundle["classifier"]
@@ -210,7 +240,7 @@ def calibrate_to_test_stats(preds: np.ndarray, target: str) -> np.ndarray:
 
     if os.environ.get(f"HYDROSAT_{target.upper()}_CALIBRATION", "") == "lognormal_rank":
         ranked = _rank_average(np.nan_to_num(out, nan=stats["median"], posinf=stats["max"], neginf=stats["min"]))
-        sigma = float(os.environ.get(f"HYDROSAT_{target.upper()}_LOGNORMAL_SIGMA", "0.55"))
+        sigma = float(os.environ.get(f"HYDROSAT_{target.upper()}_LOGNORMAL_SIGMA", "0.52"))
         normal = NormalDist()
         z = np.array([normal.inv_cdf(float(v)) for v in np.clip(ranked, 1e-5, 1 - 1e-5)], dtype="float64")
         out = stats["median"] * np.exp(sigma * z)
@@ -332,6 +362,7 @@ def heuristic_predictions(feat_df: pd.DataFrame, target: str) -> np.ndarray:
 
 
 def infer_csv(input_root: Path, csv_name: str, target: str, model_dir: Path, patch_size: int, progress_every: int) -> dict[str, list[float]]:
+    apply_runtime_defaults(model_dir)
     csv_path = input_root / csv_name
     df = pd.read_csv(csv_path, dtype={"filename": "string", "Lon": "string", "Lat": "string"})
     df_numeric = df.copy()
@@ -351,7 +382,7 @@ def infer_csv(input_root: Path, csv_name: str, target: str, model_dir: Path, pat
         feat_df_model = neutralize_geo_leakage(feat_df, target)
         model_preds = predict_model(model_bundle, feat_df_model)
         preds = model_preds
-        default_mode = "blend" if target == "turbidity" else "model"
+        default_mode = "model"
         mode = os.environ.get(f"HYDROSAT_{target.upper()}_MODE", os.environ.get("HYDROSAT_PREDICTION_MODE", default_mode))
         print(
             f"{target}: inference mode={mode} "
@@ -415,13 +446,15 @@ def main() -> None:
     parser.add_argument("--input-root", type=Path, default=Path("/input"))
     parser.add_argument("--model-dir", type=Path, default=Path("artifacts/models"))
     parser.add_argument("--output-dir", type=Path, default=Path("/output"))
-    parser.add_argument("--patch-size", type=int, default=32)
+    parser.add_argument("--patch-size", type=int)
     parser.add_argument("--progress-every", type=int, default=1000)
     args = parser.parse_args()
+    defaults = apply_runtime_defaults(args.model_dir)
+    patch_size = args.patch_size if args.patch_size is not None else int(defaults.get("patch_size", 32))
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
-    turb = infer_csv(args.input_root, "track2_turb_test_point.csv", "turbidity", args.model_dir, args.patch_size, args.progress_every)
-    chla = infer_csv(args.input_root, "track2_cha_test_point.csv", "chla", args.model_dir, args.patch_size, args.progress_every)
+    turb = infer_csv(args.input_root, "track2_turb_test_point.csv", "turbidity", args.model_dir, patch_size, args.progress_every)
+    chla = infer_csv(args.input_root, "track2_cha_test_point.csv", "chla", args.model_dir, patch_size, args.progress_every)
     turb_text = json.dumps(turb, indent=2)
     chla_text = json.dumps(chla, indent=2)
     (args.output_dir / "turbidity_result.json").write_text(turb_text, encoding="utf-8")

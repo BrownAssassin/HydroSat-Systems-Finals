@@ -1,0 +1,19 @@
+{
+  "name": "site_adaptive_research",
+  "scope": "post-release retrospective monitored-site study",
+  "leaderboard_equivalent": false,
+  "validation": {
+    "split": "date-held-out grouped validation",
+    "interpretation": "retrospective site-adaptive monitoring, not frozen blind leaderboard inference"
+  },
+  "turbidity": {
+    "score": 54.01130149777546
+  },
+  "chla": {
+    "score": 53.88130984897778
+  },
+  "algorithm_score": 53.94630567337662,
+  "frozen_runtime_reference": {
+    "algorithm_score": 14.5762
+  }
+}

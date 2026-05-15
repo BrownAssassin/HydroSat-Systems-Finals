@@ -1,0 +1,13 @@
+{
+  "winner_name": "tabular_winner",
+  "patch_size": 24,
+  "env": {
+    "HYDROSAT_CALIBRATE_TEST_STATS": "1",
+    "HYDROSAT_TURBIDITY_MODE": "model",
+    "HYDROSAT_CHLA_MODE": "model",
+    "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
+    "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.52",
+    "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.05",
+    "HYDROSAT_CHLA_PRIOR_SHRINK": "0.00"
+  }
+}
