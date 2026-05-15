@@ -45,7 +45,7 @@ The final frozen runtime path uses:
 - turbidity blend weight: `0.81`
 - released-stat calibration enabled for both targets
 
-## 3. Measured Final Evidence
+## 3. Measured Evidence
 
 After the organizers released the full Area8 image bundle and truth JSONs, we ran a full offline evaluation using the official final-round scoring formula:
 
@@ -53,13 +53,13 @@ After the organizers released the full Area8 image bundle and truth JSONs, we ra
 - `parameter_score = (0.5 * max(0, R2) + 0.5 * max(0, 1 - NRMSE)) * 100`
 - `algorithm_score = 0.5 * turbidity_score + 0.5 * chla_score`
 
-Final frozen results from `python -m hydrosat.evaluate_released_area8`:
+Frozen submission-runtime results from `python -m hydrosat.evaluate_released_area8`:
 
 - Turbidity: `RMSE 2.1440`, `R2 0.1155`, `NRMSE 0.9940`, `score 6.0765`
 - Chl-a: `RMSE 1.1400`, `R2 0.0906`, `NRMSE 0.7055`, `score 19.2541`
 - Final algorithm score: `12.6653`
 
-This is a substantial improvement over the earlier frozen local baseline of `6.0453`.
+This is a substantial improvement over the earlier frozen local baseline of `6.0453`, but it is not the strongest final-round technical direction once the released Area8 calibration set is available.
 
 Released Area8 evaluation workload:
 
@@ -67,9 +67,37 @@ Released Area8 evaluation workload:
 - `103` chl-a points
 - `475` total points
 
-Final runtime footprint:
+Frozen runtime footprint:
 
 - frozen runtime model bundle: `29.48 MB`
+
+### Post-release site-calibrated research result
+
+The strongest defensible local result is not truth replay. It is a site-calibrated model evaluated on held-out dates, so every validation date is unseen while the model may use calibration history from other dates at the same Area8 stations.
+
+Local validation protocol:
+
+- group split by acquisition date
+- three date-held-out folds
+- no held-out labels used during fitting
+- same official Track 2 score formula
+- released Area8 imagery used for feature extraction
+
+Best honest date-held-out result from `scripts/site_calibration_cv.py`:
+
+- Turbidity: `score 54.0113`
+- Chl-a: `score 53.8813`
+- Algorithm score: `53.9463`
+
+Best system shape:
+
+```text
+spectral-spatial ExtraTrees model
++ same-site temporal calibration prior
++ per-target blending strategy
+```
+
+For turbidity, the best local blend uses a learned spectral model plus per-site linear interpolation across surrounding observations. For chlorophyll-a, the best local blend uses a learned spectral model plus nearest-date same-site seasonal priors. This is much stronger than the frozen generic runtime and still avoids the invalid `100`-score shortcut of copying released truths into outputs.
 
 ## 4. Why This Is Feasible For On-Orbit Computing
 
@@ -100,6 +128,8 @@ Current differentiators:
 - explicit score-push retraining workflow focused on unseen-area behavior
 - optional CNN path kept outside the default runtime dependency chain
 - deterministic containerized input and output contract aligned to the competition platform
+- optional site-calibration layer that adapts generic spectral inference to a monitored basin without leaking held-out dates
+- temporal continuity modeling for repeat monitoring stations, which is directly relevant to operational water-quality surveillance
 
 This makes HydroSat different from a purely ground-first workflow where whole scenes are downlinked first and interpreted later.
 
@@ -119,9 +149,11 @@ The social value is strongest in settings where in situ sampling is sparse and w
 
 Our final positioning is intentionally honest:
 
-- the repository now contains a real, reproducible, container-ready final runtime
-- the released-Area8 local score improved materially through retraining and controlled runtime calibration
-- turbidity remains the harder target under geographic shift, so further gains should focus there first
+- the repository contains a real, reproducible, container-ready frozen runtime
+- the frozen submission score is only `12.6653` on full released Area8 and should not be oversold
+- the stronger final-round concept is the post-release site-calibrated system, which reaches `53.9463` under date-held-out validation without using held-out truths
+- the invalid truth-replay path can score `100`, but it is leakage and is not part of the proposal
+- turbidity remains the limiting target under geographic shift, so further gains should focus there first
 
 ## 8. Future Roadmap
 
@@ -129,10 +161,11 @@ The roadmap now starts from a stronger frozen baseline rather than from a partia
 
 Priority next steps:
 
-1. improve turbidity robustness on unseen regions and optical regimes
-2. add explicit uncertainty or quality flags
-3. introduce regime-aware routing or confidence-gated inference
-4. further compress the deployment bundle
-5. add mission-facing selective downlink logic
+1. productionize the site-calibration layer with uncertainty-aware fallbacks
+2. improve turbidity robustness on unseen regions and optical regimes
+3. add explicit uncertainty or quality flags
+4. introduce regime-aware routing or confidence-gated inference
+5. further compress the deployment bundle
+6. add mission-facing selective downlink logic
 
 So the current repository should be understood as a compact operational baseline today and a platform for a more capable onboard water-intelligence system next.
