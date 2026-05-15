@@ -1,0 +1,161 @@
+1
+00:00:00,000 --> 00:00:06,820
+Hello everyone. We are HydroSat Systems.
+Our Track 2 project turns multispectral satellite observations into actionable water-quality information.
+
+2
+00:00:06,820 --> 00:00:15,913
+We approached this challenge as an onboard decision-system problem,
+not only as a pure regression task.
+
+3
+00:00:15,913 --> 00:00:27,280
+The question for us was:
+how can a satellite ingest mounted point requests and run bounded local inference
+
+4
+00:00:27,280 --> 00:00:39,783
+while downlinking compact turbidity and chlorophyll-a products
+quickly enough to support real decisions?
+
+5
+00:00:39,783 --> 00:00:47,740
+The final architecture is modular and practical.
+
+6
+00:00:47,740 --> 00:00:56,833
+First, the container reads the mounted point tables
+and the multispectral scene bundle.
+
+7
+00:00:56,833 --> 00:01:05,927
+Second, it extracts a 24 by 24 local patch for each requested coordinate,
+so we avoid full-scene processing on the critical path.
+
+8
+00:01:05,927 --> 00:01:16,157
+Third, we generate a large feature set
+with spectral bands, water indices, ratios, spatial summaries, and seasonal metadata.
+
+9
+00:01:16,157 --> 00:01:25,250
+Fourth, we run target-specific ensemble regressors,
+apply runtime calibration, and write the required Track 2 JSON outputs.
+
+10
+00:01:25,250 --> 00:01:34,912
+We deliberately kept the default runtime CPU-first.
+
+11
+00:01:34,912 --> 00:01:45,710
+The frozen runtime model bundle is about 4.8 megabytes,
+and the default path does not depend on runtime downloads or mandatory CNN inference.
+
+12
+00:01:45,710 --> 00:01:56,508
+On this local machine, the full released Area8 evaluation
+covers 475 points in about 25.2 seconds.
+
+13
+00:01:56,508 --> 00:02:10,717
+That gives us a practical reference for execution time, artifact footprint,
+deployment simplicity, and a bounded, auditable satellite-ground workflow.
+
+14
+00:02:10,717 --> 00:02:20,947
+A ground-first pattern often prioritizes
+sending full imagery down first and interpreting it later.
+
+15
+00:02:20,947 --> 00:02:32,882
+Our design is different.
+We compute point-centered spectral-spatial descriptors and keep separate targets
+
+16
+00:02:32,882 --> 00:02:44,817
+so turbidity and chlorophyll-a can follow their own feature importance patterns,
+while heavier CNN work stays off the default path.
+
+17
+00:02:44,817 --> 00:02:59,025
+On top of that deployable baseline, we propose a site-adaptive layer
+that can use historical same-station measurements once a basin is under active monitoring.
+
+18
+00:02:59,025 --> 00:03:08,687
+The strongest evidence in the final repository
+is that we keep two questions separate.
+
+19
+00:03:08,687 --> 00:03:19,485
+For the frozen competition-style runtime,
+we use the official released Area8 evaluator and reach a reproducible algorithm score of 14.58.
+
+20
+00:03:19,485 --> 00:03:30,852
+For the stronger monitored-basin concept,
+post-release retrospective date-held-out research reached 53.95
+
+21
+00:03:30,852 --> 00:03:40,513
+after adding same-site temporal calibration.
+The first number is leaderboard-comparable.
+
+22
+00:03:40,513 --> 00:03:50,175
+The second shows why the mission design
+is more ambitious than the frozen benchmark model alone.
+
+23
+00:03:50,175 --> 00:04:00,405
+Our roadmap starts from a compact frozen baseline
+and a stronger adaptive direction.
+
+24
+00:04:00,405 --> 00:04:11,203
+First, we want to productionize the site-adaptive layer
+with uncertainty-aware fallbacks.
+
+25
+00:04:11,203 --> 00:04:22,570
+Second, we want to test causal forward-only adaptation
+for near-real-time operations and improve turbidity robustness under shift.
+
+26
+00:04:22,570 --> 00:04:32,800
+Third, we want to extend the pipeline
+toward regime-aware routing and selective downlink.
+
+27
+00:04:32,800 --> 00:04:41,325
+The important point is that the current repository is already runnable,
+and the roadmap builds on that instead of replacing it.
+
+28
+00:04:41,325 --> 00:04:51,555
+HydroSat Systems is a two-person build team.
+
+29
+00:04:51,555 --> 00:05:01,785
+Arv Bali led the modeling direction, submission ownership,
+and final proposal narrative.
+
+30
+00:05:01,785 --> 00:05:12,583
+Mrinank handled evaluation tooling, late-stage experiment infrastructure,
+environment setup, runtime integration, and packaging.
+
+31
+00:05:12,583 --> 00:05:22,813
+Together, our goal was to deliver not only a leaderboard attempt,
+but a compact and credible onboard inference baseline.
+
+32
+00:05:22,813 --> 00:05:33,043
+Thank you for listening.
+HydroSat now delivers a reproducible frozen runtime at 14.58
+
+33
+00:05:33,043 --> 00:05:41,000
+and a clearer path toward site-adaptive water-quality intelligence
+as monitoring history accumulates.
