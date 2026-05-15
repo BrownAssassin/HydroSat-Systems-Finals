@@ -11,8 +11,8 @@ from pptx.util import Inches, Pt
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-SCORE_PATH = REPO_ROOT / "artifacts" / "reports" / "released_area8" / "released_area8_scores.json"
-OUTPUT_PATH = REPO_ROOT / "Hydro Sat Systems_Arv Bali_baliarv21@gmail.com" / "hydrosat_best_technical_proposal.pptx"
+SCORE_PATH = REPO_ROOT / "docs" / "results" / "released_area8_scores.json"
+OUTPUT_PATH = REPO_ROOT / "docs" / "proposal" / "hydrosat_best_technical_proposal.pptx"
 MODELS_DIR = REPO_ROOT / "artifacts" / "models"
 
 SLIDE_W = Inches(13.333)

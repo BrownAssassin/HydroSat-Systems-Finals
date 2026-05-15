@@ -1,0 +1,30 @@
+{
+  "released_root": "D:\\Repositories\\HydroSat-Systems-Finals\\track2_download_link_1",
+  "image_root": "D:\\Repositories\\HydroSat-Systems-Finals\\track2_download_link_1\\area8_images",
+  "model_dir": "D:\\Repositories\\HydroSat-Systems-Finals\\artifacts\\models",
+  "work_dir": "D:\\Repositories\\HydroSat-Systems-Finals\\artifacts\\eval_input\\released_area8",
+  "output_dir": "D:\\Repositories\\HydroSat-Systems-Finals\\artifacts\\output\\released_area8",
+  "report_dir": "D:\\Repositories\\HydroSat-Systems-Finals\\artifacts\\reports\\released_area8",
+  "turbidity": {
+    "count": 372,
+    "rmse": 2.0727643942521694,
+    "r2": 0.17328128603892357,
+    "mean_truth": 2.157016129032258,
+    "nrmse": 0.9609406097404158,
+    "score": 10.617033814925387
+  },
+  "chla": {
+    "count": 103,
+    "rmse": 1.1465177773858453,
+    "r2": 0.08022188426833732,
+    "mean_truth": 1.615922330097087,
+    "nrmse": 0.709512924001094,
+    "score": 18.535448013362167
+  },
+  "algorithm_score": 14.576240914143778,
+  "scoring_formula": {
+    "nrmse": "rmse / mean_truth",
+    "parameter_score": "(0.5 * max(0, r2) + 0.5 * max(0, 1 - nrmse)) * 100",
+    "algorithm_score": "0.5 * turbidity_score + 0.5 * chla_score"
+  }
+}

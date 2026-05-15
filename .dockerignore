@@ -8,7 +8,6 @@ __pycache__/
 .ruff_cache/
 
 track2_download_link_*/
-Hydro Sat Systems_Arv Bali_baliarv21@gmail.com/
 artifacts/eval_input/
 artifacts/experiments/
 artifacts/features/
@@ -16,5 +15,10 @@ artifacts/output/
 artifacts/reports/
 artifacts/models_v2/
 artifacts/models_cliptest/
+docs/proposal/
+docs/results/
+FINAL_TECHNICAL_PROPOSAL.md
+SUBMISSION_MANIFEST.md
+scripts/
 catboost_info/
 *.ipynb

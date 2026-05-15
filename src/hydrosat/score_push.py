@@ -280,14 +280,14 @@ def neutral_pair_envs() -> tuple[dict[str, str], dict[str, str]]:
 def final_default_envs() -> tuple[dict[str, str], dict[str, str]]:
     common = {
         "HYDROSAT_CALIBRATE_TEST_STATS": "1",
-        "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0",
+        "HYDROSAT_TURBIDITY_PRIOR_SHRINK": "0.05",
         "HYDROSAT_CHLA_PRIOR_SHRINK": "0",
     }
     turbidity_env = {
         **common,
         "HYDROSAT_TURBIDITY_MODE": "model",
         "HYDROSAT_TURBIDITY_CALIBRATION": "lognormal_rank",
-        "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.55",
+        "HYDROSAT_TURBIDITY_LOGNORMAL_SIGMA": "0.52",
     }
     chla_env = {**common, "HYDROSAT_CHLA_MODE": "model"}
     return turbidity_env, chla_env
@@ -578,10 +578,12 @@ def make_pairing_candidate(
 
 
 def load_current_tabular_winner(*, reports_dir: Path, stage_b_summary: dict[str, object]) -> dict[str, object]:
-    overnight_path = reports_dir / "overnight_score_push_summary.json"
-    if overnight_path.exists():
-        overnight = json.loads(overnight_path.read_text(encoding="utf-8"))
-        final_summary = overnight.get("final_summary", {})
+    for summary_name in ("final_score_push_summary.json", "final_two_hour_score_push_summary.json", "overnight_score_push_summary.json"):
+        prior_summary_path = reports_dir / summary_name
+        if not prior_summary_path.exists():
+            continue
+        prior_summary = json.loads(prior_summary_path.read_text(encoding="utf-8"))
+        final_summary = prior_summary.get("final_summary", {})
         pair_model_dir = final_summary.get("pair_model_dir")
         if pair_model_dir:
             pair_dir = Path(str(pair_model_dir))
@@ -1234,7 +1236,7 @@ def main() -> None:
         best_tuned = evaluated_candidates[0]
 
     candidate_report["evaluated_candidates"] = evaluated_candidates
-    _write_json(args.reports_dir / "final_two_hour_candidates.json", candidate_report)
+    _write_json(args.reports_dir / "final_score_push_candidates.json", candidate_report)
 
     winner_type = (
         "regime_pair"
@@ -1272,12 +1274,12 @@ def main() -> None:
         "stage_a_best": stage_a_summary["best_experiment"]["name"],
         "stage_b_best": stage_b_summary["best_experiment"]["name"],
     }
-    _write_json(args.reports_dir / "final_two_hour_score_push_summary.json", summary)
-    (args.reports_dir / "final_two_hour_score_push_summary.md").write_text(
+    _write_json(args.reports_dir / "final_score_push_summary.json", summary)
+    (args.reports_dir / "final_score_push_summary.md").write_text(
         summarize_final_markdown(summary),
         encoding="utf-8",
     )
-    print((args.reports_dir / "final_two_hour_score_push_summary.md").read_text(encoding="utf-8"))
+    print((args.reports_dir / "final_score_push_summary.md").read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":

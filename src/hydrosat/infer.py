@@ -240,7 +240,7 @@ def calibrate_to_test_stats(preds: np.ndarray, target: str) -> np.ndarray:
 
     if os.environ.get(f"HYDROSAT_{target.upper()}_CALIBRATION", "") == "lognormal_rank":
         ranked = _rank_average(np.nan_to_num(out, nan=stats["median"], posinf=stats["max"], neginf=stats["min"]))
-        sigma = float(os.environ.get(f"HYDROSAT_{target.upper()}_LOGNORMAL_SIGMA", "0.55"))
+        sigma = float(os.environ.get(f"HYDROSAT_{target.upper()}_LOGNORMAL_SIGMA", "0.52"))
         normal = NormalDist()
         z = np.array([normal.inv_cdf(float(v)) for v in np.clip(ranked, 1e-5, 1 - 1e-5)], dtype="float64")
         out = stats["median"] * np.exp(sigma * z)
@@ -382,7 +382,7 @@ def infer_csv(input_root: Path, csv_name: str, target: str, model_dir: Path, pat
         feat_df_model = neutralize_geo_leakage(feat_df, target)
         model_preds = predict_model(model_bundle, feat_df_model)
         preds = model_preds
-        default_mode = "blend" if target == "turbidity" else "model"
+        default_mode = "model"
         mode = os.environ.get(f"HYDROSAT_{target.upper()}_MODE", os.environ.get("HYDROSAT_PREDICTION_MODE", default_mode))
         print(
             f"{target}: inference mode={mode} "

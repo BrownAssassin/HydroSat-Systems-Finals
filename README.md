@@ -1,135 +1,180 @@
-# HydroSat Systems - Track 2 Final Round
+# HydroSat-Systems-Finals
 
-HydroSat Systems is our final-round repository for `Track 2: Space Intelligence Promoting Water Quality` in the ITU AI and Space Computing Challenge. The final frozen submission path is a compact inference pipeline that predicts:
+[![Python](https://img.shields.io/badge/Python-3.10-blue)](https://www.python.org/)
+[![Task](https://img.shields.io/badge/Task-Water%20Quality%20Regression-2E8B57)](https://en.wikipedia.org/wiki/Regression_analysis)
+[![Track](https://img.shields.io/badge/Track-2%20Clean%20Water-0099CC)](https://spaceaichallenge.zero2x.org/competition)
+[![Runtime](https://img.shields.io/badge/Runtime-Tabular%20Ensemble-1E88E5)](https://scikit-learn.org/)
+[![Project](https://img.shields.io/badge/Project-ITU%20Ingenuity%20Cup%202026-orange)](https://github.com/BrownAssassin/HydroSat-Systems-Finals)
+[![Released Area8](https://img.shields.io/badge/Released%20Area8-14.58-brightgreen)](https://github.com/BrownAssassin/HydroSat-Systems-Finals)
+[![Repo Size](https://img.shields.io/github/repo-size/BrownAssassin/HydroSat-Systems-Finals)](https://github.com/BrownAssassin/HydroSat-Systems-Finals)
 
-- turbidity
-- chlorophyll-a
+Final-round repository for the **ITU Ingenuity Cup: AI and Space Computing Challenge** submission by **HydroSat Systems**.
 
-from 12-band GeoTIFF imagery using point-centered patch extraction, handcrafted spectral-spatial features, and target-specific ensemble regressors.
+This repository is focused on **Track 2: Space Intelligence Promoting Water Quality**. The final-round task is point-level prediction of:
 
-## Final Frozen Runtime
+- `turbidity`
+- `chlorophyll-a`
 
-The current default runtime is the best validated late-stage score-push candidate:
+from multispectral GeoTIFF imagery. The final-round scoring emphasizes regression quality rather than segmentation quality, and our final public-facing repository keeps the frozen inference bundle, the full score-push training path, and the supporting proposal assets together in one place.
 
-- winning pair: `patch24_filter15_top3_feat800__patch24_filter15_top3_feat800`
-- stage A best structure: `patch24_filter15`
-- stage B best experiment: `patch24_filter15_top3_feat800`
-- feature patch size: `24x24`
-- turbidity runtime mode: `model`
-- turbidity calibration: `lognormal_rank`
-- turbidity lognormal sigma: `0.52`
-- turbidity prior shrink: `0.05`
-- chlorophyll-a runtime mode: `model`
-- released-stat calibration: enabled
-- CNNs: disabled on the critical path
+## Team
 
-Runtime model files:
+- **Team name:** HydroSat Systems
+- **Team leader:** [Arv Bali](https://github.com/ArvBali2101)
+- **Team members:**
+  - [Arv Bali](https://github.com/ArvBali2101)
+  - [Mrinank Sivakumar](https://github.com/BrownAssassin)
+
+## Final Frozen Result
+
+- **Winning runtime family:** patch-based tabular ensemble
+- **Winning search path:** `patch24_filter15_top3_feat800`
+- **Frozen patch size:** `24x24`
+- **Turbidity runtime mode:** `model`
+- **Turbidity calibration:** `lognormal_rank`
+- **Turbidity sigma:** `0.52`
+- **Turbidity prior shrink:** `0.05`
+- **Chl-a runtime mode:** `model`
+- **Critical-path CNN usage:** disabled
+
+Final released-Area8 offline evaluation:
+
+- **Turbidity:** `RMSE = 2.0728`, `R2 = 0.1733`, `NRMSE = 0.9609`, `score = 10.6170`
+- **Chl-a:** `RMSE = 1.1465`, `R2 = 0.0802`, `NRMSE = 0.7095`, `score = 18.5354`
+- **Algorithm score:** `14.5762`
+
+Locked public references:
+
+- `docs/results/released_area8_scores.json`
+- `docs/results/released_area8_scores.md`
+- `docs/results/final_score_push_summary.json`
+- `docs/results/final_score_push_summary.md`
+
+Frozen runtime artifacts:
 
 - `artifacts/models/turbidity_ensemble.joblib`
 - `artifacts/models/chla_ensemble.joblib`
 - `artifacts/models/runtime_env_defaults.json`
 
-Frozen runtime artifact footprint:
+## What Is Versioned
 
-- `4.84 MB`
+This repo intentionally keeps the minimum Git-tracked assets needed to reproduce, package, and explain the final result:
 
-## Final Released Area8 Offline Evaluation
+- all code for feature extraction, training, tuning, inference, and evaluation in `src/hydrosat/`
+- the final frozen inference bundle in `artifacts/models/`
+- stable final evaluation summaries in `docs/results/`
+- proposal assets in `docs/proposal/`
+- root-level competition and submission docs
 
-Using the official released Area8 truth JSONs and the final-round scoring formula:
+This repo intentionally does **not** keep large local-only artifacts that are better regenerated on demand:
 
-- Turbidity: `RMSE = 2.0728`, `R2 = 0.1733`, `NRMSE = 0.9609`, `score = 10.6170`
-- Chl-a: `RMSE = 1.1465`, `R2 = 0.0802`, `NRMSE = 0.7095`, `score = 18.5354`
-- Algorithm score: `14.5762`
+- raw organizer download folders under `track2_download_link_*/`
+- local feature caches
+- local experiment folders
+- local temporary prediction outputs
+- local evaluation work directories
+- local training logs and caches
+- local virtual environments
 
-Improvement over the prior frozen baseline:
+That means a clean Git clone supports both:
 
-- previous frozen runtime score: `14.4445`
-- late-stage gain: `+0.1318` points (`+0.91%`)
-- total gain over the earlier `12.6653` baseline: `+1.9109` points (`+15.09%`)
+- a **quick frozen-runtime inference path**
+- a **full-from-scratch score-push rebuild path**, as long as the local raw organizer folders are present
 
-Those final numbers are written to:
+## Repository Layout
 
-- `artifacts/reports/released_area8/released_area8_scores.json`
-- `artifacts/reports/released_area8/released_area8_scores.md`
+```text
+src/hydrosat/             # inference, feature extraction, training, tuning, evaluation
+artifacts/models/         # final frozen runtime bundle kept in Git
+docs/proposal/            # final PPT, presentation script, and slide template
+docs/results/             # tracked final score summaries
+scripts/                  # proposal deck regeneration helper
+track2_download_link_*/   # local raw organizer downloads, kept out of Git
+```
 
-The final late-stage search summary is written to:
+Optional experiment utilities that are kept for roadmap work but are **not** part of the submission-critical path:
 
-- `artifacts/reports/final_two_hour_score_push_summary.json`
-- `artifacts/reports/final_two_hour_score_push_summary.md`
+- `src/hydrosat/train_cnn.py`
+- `src/hydrosat/diagnose_features.py`
+- `src/hydrosat/train_regime_ensemble.py`
 
-## Repo Layout
+## Setup
 
-- `src/hydrosat/` contains raster IO, feature extraction, training CLIs, inference CLI, released-Area8 scoring, and the final score-push harness.
-- `artifacts/models/` contains the frozen runtime models used by inference.
-- `track2_download_link_1/` to `track2_download_link_5/` contain the raw organizer downloads and stay at the repo root for compatibility.
-- `Hydro Sat Systems_Arv Bali_baliarv21@gmail.com/` contains the regenerated deck and presentation script.
-- `scripts/build_proposal_deck.py` regenerates the PPT from the current released-Area8 report.
+This project targets **Python 3.10**. The frozen tabular inference path does **not** require a GPU or PyTorch.
 
-Generated local outputs are ignored under:
+### Baseline setup for CPU or GPU machines
 
-- `artifacts/eval_input/`
-- `artifacts/output/`
-- `artifacts/reports/`
-- `artifacts/features/`
-- `artifacts/experiments/`
-
-## Local Setup On This Windows GPU Machine
-
-Use Python `3.10`.
+Windows PowerShell:
 
 ```powershell
 py -3.10 -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
-python -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
+python -m pip install -e .
+```
+
+Generic shell:
+
+```bash
+python3.10 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+python -m pip install -e .
 ```
 
 Quick verification:
 
-```powershell
-python -c "import sklearn, torch; print('sklearn', sklearn.__version__); print('cuda', torch.cuda.is_available()); print(torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'CPU')"
+```bash
+python -c "import hydrosat, sklearn; print('hydrosat ok'); print('sklearn', sklearn.__version__)"
 ```
 
-Expected local state:
+Expected baseline state:
 
+- `hydrosat` imports without `PYTHONPATH`
 - `scikit-learn 1.7.2`
-- CUDA available: `True`
-- device: `NVIDIA GeForce RTX 5070 Laptop GPU`
 
-## Run Sample Input Inference
+### Optional GPU setup for roadmap CNN experiments
 
-The runtime bundle now carries its own defaults in `artifacts/models/runtime_env_defaults.json`, so the standard CLI reproduces the winning configuration automatically.
+Only do this if you plan to use `train_cnn.py` or other PyTorch-based experiments.
 
-```powershell
-$env:PYTHONPATH = "src"
-python -m hydrosat.infer `
-  --input-root "track2_download_link_1\Guide to the Second Round_track2\test_input_sample" `
-  --model-dir "artifacts\models" `
-  --output-dir "artifacts\output\sample_input_final" `
+```bash
+python -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
+python -c "import torch; print(torch.cuda.is_available())"
+```
+
+## Quick Inference With The Frozen Models
+
+The runtime bundle carries its own defaults in `artifacts/models/runtime_env_defaults.json`, so the standard inference CLI reproduces the winning configuration automatically.
+
+Sample input inference:
+
+```bash
+python -m hydrosat.infer \
+  --input-root "track2_download_link_1/Guide to the Second Round_track2/test_input_sample" \
+  --model-dir "artifacts/models" \
+  --output-dir "artifacts/output/sample_input_final" \
   --progress-every 1000
 ```
 
-This writes all four naming variants:
+This writes all four required naming variants:
 
 - `turbidity_result.json`
 - `chla_result.json`
 - `result_turbidity.json`
 - `result_chla.json`
 
-## Re-Run Final Released Area8 Evaluation
+## Released-Area8 Evaluation
 
-The released-Area8 evaluation is the source of truth for the final local score:
+The released-Area8 evaluator is the local source of truth for the final public score.
 
-```powershell
-$env:PYTHONPATH = "src"
-python -m hydrosat.evaluate_released_area8 `
-  --released-root "track2_download_link_1" `
-  --model-dir "artifacts\models" `
-  --work-dir "artifacts\eval_input\released_area8" `
-  --output-dir "artifacts\output\released_area8" `
-  --report-dir "artifacts\reports\released_area8" `
-  --patch-size 24 `
+```bash
+python -m hydrosat.evaluate_released_area8 \
+  --released-root "track2_download_link_1" \
+  --model-dir "artifacts/models" \
+  --work-dir "artifacts/eval_input/released_area8" \
+  --output-dir "artifacts/output/released_area8" \
   --progress-every 1000
 ```
 
@@ -138,50 +183,77 @@ Current measured workload:
 - `372` turbidity points
 - `103` chl-a points
 - `475` total points
-- measured local runtime: `25.23 s`
 
-## Reproduce The Score Push Harness
+Tracked frozen result copies live in:
 
-Build features for all searched patch sizes:
+- `docs/results/released_area8_scores.json`
+- `docs/results/released_area8_scores.md`
 
-```powershell
-$env:PYTHONPATH = "src"
-python -m hydrosat.score_push `
-  --data-root . `
-  --released-root track2_download_link_1 `
-  --features-dir artifacts/features `
-  --experiments-dir artifacts/experiments `
-  --reports-dir artifacts/reports `
-  --runtime-model-dir artifacts/models `
-  --progress-every 500 `
-  --random-state 42 `
+## Full Reproduction From Scratch
+
+The full rebuild path assumes the raw organizer folders are available locally at the repo root:
+
+- `track2_download_link_1/`
+- `track2_download_link_2/`
+- `track2_download_link_3/`
+- `track2_download_link_4/`
+- `track2_download_link_5/`
+
+Run the full score-push pipeline:
+
+```bash
+python -m hydrosat.score_push \
+  --data-root . \
+  --released-root track2_download_link_1 \
+  --features-dir artifacts/features \
+  --experiments-dir artifacts/experiments \
+  --runtime-model-dir artifacts/models \
+  --progress-every 500 \
+  --random-state 42 \
   --selection-metric score
 ```
 
-What the final score-push harness now does:
+That command performs the full rebuild path:
 
-- builds features for patch sizes `24`, `32`, and `40`
-- runs Stage A structural search over `full`, `filter05`, `filter10`, `filter15`, `filter10_clip97`, and `filter10_clip99`
-- runs Stage B fine search over the best promoted structures
-- tunes the current best tabular winner with a bounded released-Area8 last-mile search
-- evaluates the saved regime turbidity candidate against the best current chl-a bundle
-- runs a narrow turbidity-only retrain fallback if tuning alone does not beat the live floor
-- freezes the best winning runtime back into `artifacts/models/`
+- feature generation for the searched patch sizes
+- Stage A structural search
+- Stage B fine search
+- mixed pairing evaluation
+- bounded released-Area8 tuning
+- late-stage fallback comparison
+- final runtime freezing back into `artifacts/models/`
 
-The final winner before freezing in the last push was:
+The final public winner of the last push was:
 
 - `patch24_filter15_top3_feat800__patch24_filter15_top3_feat800`
 
+### Advanced utilities
+
+These utilities are useful when reproducing only part of the pipeline:
+
+- `python -m hydrosat.build_features`
+- `python -m hydrosat.train_ensemble`
+- `python -m hydrosat.train_regime_ensemble`
+- `python -m hydrosat.evaluate_released_area8`
+
+## Proposal And Report Assets
+
+- Final score summaries: `docs/results/`
+- Final technical proposal deck: `docs/proposal/hydrosat_best_technical_proposal.pptx`
+- Final presentation script: `docs/proposal/presentation_script.md`
+- Competition slide template reference: `docs/proposal/slides_sample.pptx`
+
 ## Submission Notes
 
-- `Dockerfile` uses the competition PyTorch CUDA base image.
+- `Dockerfile` uses the competition base image and mirrors the frozen runtime defaults.
 - `.gitlab-ci.yml` is aligned to `./run.sh`.
-- `run.sh` expects:
-  - `INPUT_DIR=/input`
-  - `OUTPUT_DIR=/output`
-  - `MODEL_DIR=/workspace/artifacts/models`
+- `run.sh` launches `python -m hydrosat.infer`.
+- The submission-critical runtime contract remains:
+  - `/input`
+  - `/output`
+  - `/workspace/artifacts/models`
 
-Default submission-time runtime behavior:
+Default frozen runtime behavior:
 
 - `PATCH_SIZE=24`
 - `HYDROSAT_CALIBRATE_TEST_STATS=1`
@@ -192,13 +264,13 @@ Default submission-time runtime behavior:
 - `HYDROSAT_CHLA_MODE=model`
 - `HYDROSAT_ENABLE_CNN=0`
 
-The raw competition downloads are intentionally excluded from Docker with `.dockerignore`.
+## Proposal And Report Assets
 
-## Proposal Assets
-
-- `Hydro Sat Systems_Arv Bali_baliarv21@gmail.com/hydrosat_best_technical_proposal.pptx`
-- `Hydro Sat Systems_Arv Bali_baliarv21@gmail.com/presentation_script.md`
-- `Hydro Sat Systems_Arv Bali_baliarv21@gmail.com/slides_sample.pptx`
+- `docs/proposal/hydrosat_best_technical_proposal.pptx`
+- `docs/proposal/presentation_script.md`
+- `docs/proposal/slides_sample.pptx`
+- `docs/results/released_area8_scores.json`
+- `docs/results/final_score_push_summary.json`
 - `FINAL_TECHNICAL_PROPOSAL.md`
 - `README_SUBMISSION.txt`
 - `SUBMISSION_MANIFEST.md`
